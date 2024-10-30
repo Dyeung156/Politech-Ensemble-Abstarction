@@ -28,7 +28,20 @@ def get_AsianVAP(district):
 def get_NHPIVAP(district):
     return district["NHPIVAP"]
 
+def get_total_district_pop(district):
+    return get_HVAP(district) + get_WVAP(district) + get_BVAP(district) + get_AsianVAP(district) + get_AminVAP(district) + get_NHPIVAP(district)
+
+def checking_something():
+    for map in json_data:
+        for district in map["districts"]:
+            total = get_total_district_pop(district)
+            if get_AminVAP(district) / total > 10.0:
+                return True
+            
+    return False
+
 #plans -> map -> "districts" -> specific district -> values
 print(json_data[0]["districts"][0]["HVAP"])
 print(json_data[1]["districts"][0]["HVAP"], "\n")
-print(f"Function returned: {get_HVAP(json_data[1]["districts"][0])}")
+print(f"Function returned: {checking_something()}")
+print(f"len of data is {len(json_data)}")
