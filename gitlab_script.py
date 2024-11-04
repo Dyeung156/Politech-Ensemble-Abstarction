@@ -72,7 +72,6 @@ def get_file_content(project_id, file_path, branch):
 #parameters: content (dict()) - JSON file content being extracted
 #returns: dict() - extracted content 
 def extract_values(content):
-    """Extract lines containing a specific keyword from the file content."""
     values = []
     for line in content.splitlines():
         values.append(line)
