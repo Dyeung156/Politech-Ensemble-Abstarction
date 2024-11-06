@@ -1,5 +1,13 @@
 import pandas as pd
 import json
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from the .env file
+load_dotenv()
+
+THRESHOLD = float(os.getenv("THRESHOLD"))
+
 # #open up JSON file
 # with open("Georgia-1000.json", "r") as json_file:
 #     json_data = json.load(json_file)
@@ -34,17 +42,17 @@ def get_opportunity_districts(file_path):
     row = 0
     cur_map = 0 
     while row < len(df): 
-        for _ in range(14):
+        for _ in range(26):
             total_population = df.iloc[row]["RacialDemographic.TOTAL"]
             for m in minorities: 
                 minority_population = df.iloc[row][m] 
-                if (minority_population/total_population) >= 0.5: 
+                if (minority_population/total_population) >= THRESHOLD: 
                     indexes[m].add(cur_map) 
             row+=1
         cur_map+=1
     return indexes
 
-opportunity_districts = get_opportunity_districts("../output.csv")
+opportunity_districts = get_opportunity_districts("output.csv")
 
 minorities = ["RacialDemographic.HISPA","RacialDemographic.BLACK","RacialDemographic.NATIV","RacialDemographic.ASIAN","RacialDemographic.HAWAI"]
 
