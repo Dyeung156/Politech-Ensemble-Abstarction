@@ -1,60 +1,65 @@
 import pandas as pd
-import json
 from dotenv import load_dotenv
 import os
 
 # Load environment variables from the .env file
 load_dotenv()
-
 THRESHOLD = float(os.getenv("THRESHOLD"))
 
-# #open up JSON file
-# with open("Georgia-1000.json", "r") as json_file:
-#     json_data = json.load(json_file)
-# #skip annoying index
-# json_data = json_data["plans"]
+#dictionary to hold map indices 
+map_indices = dict()
 
-
-# file_path = "georgia_gerrychain_0.csv"
-# data = pd.read_csv(file_path)
-
-# print(data.head(), "\n")
-# print(data["RacialDemographic.TOTAL"])
-
-
-#plans -> map -> "districts" -> specific district -> values
-# print(json_data[0]["districts"][0]["HVAP"])
-# print(json_data[1]["districts"][0]["HVAP"], "\n")
-
-
-
+#Description: returns the number of districts in a map 
+#parameters: file_path (str) - path to the csv file 
+#returns: int - the number of districts in a map
+def get_num_districts(file_path):
+    df = pd.read_csv(file_path) 
+    
+    length = len(df)
+    #go thru the dataframe until the district number resets (starts at 1)
+    for row_index in range(1, length):
+        if df.iloc[row_index]["District"] == 1:
+            #the dataframe is 0-indexed so the current row index would suffice
+            return row_index
+        
 #Description: returns a set of maps for each minority group that contains an opportunity district for that minority group
 #parameters: file_path (str) - path to the csv file 
 #returns: dict - keys (minority groups), value (maps with opporuntiy districts with that minority group)
-def get_opportunity_districts(file_path):
+def opportunity_district_maps(file_path):
     df = pd.read_csv(file_path) 
     indexes = dict() 
-    minorities = ["RacialDemographic.HISPA","RacialDemographic.BLACK","RacialDemographic.NATIV","RacialDemographic.ASIAN","RacialDemographic.HAWAI"]
+    minorities = ["RacialDemographic.HISPA","RacialDemographic.BLACK","RacialDemographic.ASIAN"]
     # intiailize the dictionary 
     for m in minorities:
         indexes[m] = set() 
 
     row = 0
     cur_map = 0 
+    num_districts = get_num_districts(file_path)
+    
+    #go thru each row in the dataframe
     while row < len(df): 
-        for _ in range(26):
+        #look at every district in the map 
+        for _ in range(num_districts):
             total_population = df.iloc[row]["RacialDemographic.TOTAL"]
+            
+            #check for each ethnic group for possible opportunity district
             for m in minorities: 
                 minority_population = df.iloc[row][m] 
                 if (minority_population/total_population) >= THRESHOLD: 
                     indexes[m].add(cur_map) 
+                    
             row+=1
         cur_map+=1
     return indexes
+    
+if __name__ == "__main__":
+    file_path = "output.csv"
+    opportunity_districts = opportunity_district_maps(file_path)
 
-opportunity_districts = get_opportunity_districts("output.csv")
+    minorities = ["RacialDemographic.HISPA","RacialDemographic.BLACK","RacialDemographic.ASIAN"]
 
-minorities = ["RacialDemographic.HISPA","RacialDemographic.BLACK","RacialDemographic.NATIV","RacialDemographic.ASIAN","RacialDemographic.HAWAI"]
-
-for m in minorities:
-    print(m, len(opportunity_districts[m]))
+    for m in minorities:
+        print(m, len(opportunity_districts[m]))
+        
+    
