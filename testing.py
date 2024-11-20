@@ -1,15 +1,16 @@
 import pandas as pd
 from dotenv import load_dotenv
 import os
+import json
 
 # Load environment variables from the .env file
 load_dotenv()
 THRESHOLD = float(os.getenv("THRESHOLD"))
 
 minorities = ["RacialDemographic.HISPA","RacialDemographic.BLACK","RacialDemographic.ASIAN"]
-
-#dictionary to hold map indices 
-map_indices = dict()
+HISPANIC = 0
+BLACK = 1
+ASIAN = 2
 
 #Description: returns the number of districts in a map 
 #parameters: file_path (str) - path to the csv file 
@@ -66,14 +67,50 @@ def opportunity_district_maps(file_path):
         cur_map+=1
         
     return maps_info
-    
+
+#maps is the list of (index, tuple)
+def upload_maps(maps):
+    #dictionary to hold map indices 
+    indices_dict = dict()
+
+    #go thru each map
+    for map in maps:
+        map_index = map[0]
+        hispanic_value = map[1][HISPANIC]
+        black_value = map[1][BLACK]
+        asian_value = map[1][ASIAN]
+        
+        #check if the dict for the Hispanic value exists yet
+        if hispanic_value not in indices_dict:
+            indices_dict[hispanic_value] = dict()
+        
+        #check if the nested dict for Black value exists yet
+        if black_value not in indices_dict[hispanic_value]:
+            indices_dict[hispanic_value][black_value] = dict()
+            
+        #check if the Asian level (the actual list of indices) exists yet
+        if asian_value not in indices_dict[hispanic_value][black_value]:
+            indices_dict[hispanic_value][black_value][asian_value] = list()
+            
+        #add the map index to the list
+        indices_dict[hispanic_value][black_value][asian_value].append(map_index)
+
+    #upload the dictionary to a JSON file 
+    with open("map_data.json", "w") as json_file:
+        json.dump(indices_dict, json_file, indent=4)
+
+    return indices_dict
+        
+            
 if __name__ == "__main__":
     file_path = "output.csv"
     opportunity_maps = opportunity_district_maps(file_path)
 
     for map in opportunity_maps:
         print(map)
-    # for m in minorities:
-    #     print(m, len(opportunity_districts[m]))
         
+    upload_maps(opportunity_maps[0:3:])
     
+    with open("map_data.json", "r") as json_file:
+        print(json.load(json_file))
+        
