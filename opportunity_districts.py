@@ -88,29 +88,10 @@ def upload_maps(maps):
         indices_dict[hispanic_value][black_value][asian_value].append(map_index)
 
     #upload the dictionary to a JSON file 
-    with open("map_data.json", "w") as json_file:
+    with open("opportunity_district_data.json", "w") as json_file:
         json.dump(indices_dict, json_file, indent=4)
 
     return indices_dict
-
-#Description: recursively converts a nested dict's keys to int
-#parameters: indices_dict (dict) - nested dict where the keys are str
-#            levels (int) - current level in the nested dict (start at the highest level)
-#no output 
-def convert_json_keys(indices_dict, levels : int):
-    if levels == 0:
-        return
-    
-    # Modify the current level's keys in place (without reassignment)
-    for key in list(indices_dict.keys()):  
-        value = indices_dict.pop(key)       
-        indices_dict[int(key)] = value     
-
-    #go thru each level in the nested dict
-    for key in list(indices_dict.keys()):
-        # If the value is a dictionary, recurse into it
-        if isinstance(indices_dict[key], dict):
-            convert_json_keys(indices_dict[key], levels - 1)
     
 if __name__ == "__main__":
     file_path = "output.csv"
@@ -121,10 +102,10 @@ if __name__ == "__main__":
         
     upload_maps(opportunity_maps)
     
-    with open("map_data.json", "r") as json_file:
+    with open("opportunity_district_data.json", "r") as json_file:
         data = json.load(json_file)
         
-    convert_json_keys(data, 3)
+    util.convert_json_keys(data, 3)
 
     for his_index in data.keys():
         for black_index in data[his_index].keys():
