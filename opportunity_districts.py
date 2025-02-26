@@ -9,13 +9,13 @@ import util
 load_dotenv()
 THRESHOLD = float(os.getenv("THRESHOLD"))
 
-minorities = ["RacialDemographic.HISPA","RacialDemographic.BLACK","RacialDemographic.ASIAN"]
+ethnic_groups = ["RacialDemographic.HISPA","RacialDemographic.BLACK"]
 HISPANIC = 0
 BLACK = 1
-ASIAN = 2
+WHITE = 2
 
 #Description: returns a tuple that describes the map through opportunity districts. The tuple format is:
-#             (hispanic districts, black districts, asian districts)
+#             (hispanic districts, black districts, white districts)
 #Parameters: df (Object) - dataframe containing the ensemble
 #            num_districts (int) - the number of districts in a map
 #            row (int) - the first row in df for the map 
@@ -25,14 +25,17 @@ def create_map_tuple(df , num_districts : int, row : int):
     
     #look at the districts in the map
     for index in range(num_districts):
-        length = len(minorities)
+        length = len(ethnic_groups)
         total_population = df.iloc[row + index]["RacialDemographic.TOTAL"]
         
         #see if it's an opportunity district for any group
         for group_index in range(0, length):
-            minority_population = df.iloc[row + index][minorities[group_index]] 
+            minority_population = df.iloc[row + index][ethnic_groups[group_index]] 
             if (minority_population/total_population) >= THRESHOLD: 
                 district_counts[group_index] += 1
+                break
+            #if not opportunity district for minority -> white district 
+            district_counts[WHITE] += 1
     
     return tuple(district_counts)
 
@@ -70,7 +73,7 @@ def upload_maps(maps):
         map_index = map[0]
         hispanic_value = map[1][HISPANIC]
         black_value = map[1][BLACK]
-        asian_value = map[1][ASIAN]
+        white_value = map[1][WHITE]
         
         #check if the dict for the Hispanic value exists yet
         if hispanic_value not in indices_dict:
@@ -80,14 +83,14 @@ def upload_maps(maps):
         if black_value not in indices_dict[hispanic_value]:
             indices_dict[hispanic_value][black_value] = dict()
             
-        #check if the Asian level (the actual list of indices) exists yet
-        if asian_value not in indices_dict[hispanic_value][black_value]:
-            indices_dict[hispanic_value][black_value][asian_value] = list()
+        #check if the white level (the actual list of indices) exists yet
+        if white_value not in indices_dict[hispanic_value][black_value]:
+            indices_dict[hispanic_value][black_value][white_value] = list()
             
         #add the map index to the list
-        indices_dict[hispanic_value][black_value][asian_value].append(map_index)
+        indices_dict[hispanic_value][black_value][white_value].append(map_index)
 
-    #upload the dictionary to a JSON file 
+    #upload the dictionary to a JSON file
     with open("opportunity_district_data.json", "w") as json_file:
         json.dump(indices_dict, json_file, indent=4)
 

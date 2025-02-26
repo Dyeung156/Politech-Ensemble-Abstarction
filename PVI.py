@@ -15,24 +15,24 @@ NATIONAL_MARGIN = 3.825 / 100 #in DEM favor
 #https://www.cnn.com/election/2020/results/president
 #https://www.cnn.com/election/2024/results/president?election-data-id=2024-PG&election-painting-mode=projection-with-lead&filter-key-races=false&filter-flipped=false&filter-remaining=false
 
-#map tuple
-def create_map_tuple(df , num_districts : int, row : int):
-    district_counts = [0, 0]
+# #map tuple
+# def create_map_tuple(df , num_districts : int, row : int):
+#     district_counts = [0, 0]
     
-    #look at the districts in the map
-    for index in range(num_districts):
-        dem_voters = df.iloc[row + index][PARTIES[DEMOCRATIC]] 
-        rep_voters = df.iloc[row + index][PARTIES[REPUBLICIAN]]
+#     #look at the districts in the map
+#     for index in range(num_districts):
+#         dem_voters = df.iloc[row + index][PARTIES[DEMOCRATIC]] 
+#         rep_voters = df.iloc[row + index][PARTIES[REPUBLICIAN]]
         
-        if dem_voters > rep_voters:
-            district_counts[DEMOCRATIC] += 1
-        else:
-            district_counts[REPUBLICIAN] += 1
+#         if dem_voters > rep_voters:
+#             district_counts[DEMOCRATIC] += 1
+#         else:
+#             district_counts[REPUBLICIAN] += 1
         
-    return tuple(district_counts)
+#     return tuple(district_counts)
 
 #the weighted PVI for the map
-def calculate_weighted_PVI(df , num_districts : int, row : int):
+def calculate__PVI(df , num_districts : int, row : int):
     weighted_PVI = 0
     state_voters = 0
     
@@ -54,27 +54,51 @@ def calculate_weighted_PVI(df , num_districts : int, row : int):
         #weighted_PVI += PVI * district_voters
         weighted_PVI += PVI
         
-    return round(weighted_PVI / num_districts, 3)
-        
-#create a list to describe map data (based on PVI)
-def political_party_maps(file_path):
+    return float(round(weighted_PVI / num_districts, 3))
+
+def make_PVI_dict(file_path):
     df = pd.read_csv(file_path) 
-    maps_info = list()
 
     row = 0
     cur_map = 0 
     num_districts = util.get_num_districts(file_path)
     
+    result_dict = dict()
+    
     #go thru each row in the dataframe
-    while row < len(df): 
-        #create the map tuple for each map and add it to the list
-        maps_info.append( (cur_map, create_map_tuple(df, num_districts, row)) )
+    while row < len(df):    
+        PVI_value = calculate__PVI(df, num_districts, row)
+        
+        if PVI_value in result_dict:
+            result_dict[PVI_value].append(cur_map)
+        else:
+            result_dict[PVI_value] = [cur_map]
         
         #move row to the next map
         row += num_districts
         cur_map += 1
         
-    return maps_info
+    return result_dict
+
+# #create a list to describe map data (based on PVI)
+# def political_party_maps(file_path):
+#     df = pd.read_csv(file_path) 
+#     maps_info = list()
+
+#     row = 0
+#     cur_map = 0 
+#     num_districts = util.get_num_districts(file_path)
+
+#     #go thru each row in the dataframe
+#     while row < len(df): 
+#         #create the map tuple for each map and add it to the list
+#         maps_info.append( (cur_map, create_map_tuple(df, num_districts, row)) )
+        
+#         #move row to the next map
+#         row += num_districts
+#         cur_map += 1
+        
+#     return maps_info
 
 #Description: uploads map data to a JSON file in a nested dict
 #parameters: maps (list) - list is in the format (int, tuple)
@@ -98,12 +122,15 @@ def upload_maps(maps):
 
     return indices_dict
 
+def controller_function()
+
 if __name__ == "__main__":
     file_path = "output.csv"
-    political_maps = political_party_maps(file_path)
+    political_maps = make_PVI_dict(file_path)
 
-    # for map in opportunity_maps:
-    #     print(map)
+    print()
+    # for key, item in political_maps.items():
+    #     print(f"{key}: {item}")
         
     #upload_maps(political_maps)
     
@@ -112,8 +139,8 @@ if __name__ == "__main__":
         
     # util.convert_json_keys(data, 3)
     
-    for map in political_maps:
-        print(map)
+    # for map in political_maps:
+    #     print(map)
 
     # for dem_index in data.keys():
     #     for rep_index in data[dem_index].keys():
