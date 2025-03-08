@@ -122,7 +122,8 @@ def upload_maps(maps):
 
     return indices_dict
 
-def controller_function()
+def controller_function():
+    return
 
 if __name__ == "__main__":
     file_path = "output.csv"
