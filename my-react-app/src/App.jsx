@@ -3,12 +3,9 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import ColorWheel from './ColorWheel'
-
-
+import ColorTriangle from './ColorTriangle'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
       <div>
@@ -21,8 +18,11 @@ function App() {
       </div>
 
       <div>
-
         <ColorWheel/>
+      </div>
+
+      <div>
+        <ColorTriangle/>
       </div>
 
     </>

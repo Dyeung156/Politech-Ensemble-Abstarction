@@ -15,21 +15,32 @@ function ColorWheelWithRGBButtons() {
     const segmentElements = [];
     const segments = 24;
     
+    // Loop thru each segment based on degrees 
     for (let i = 0; i < 360; i += 360 / segments) {
+      // detail the color for the segment
       const hue = i;
       const color = `hsl(${hue}, 100%, 50%)`;
       
+      // convert degrees to radians for math function
       const startAngle = (i * Math.PI) / 180;
       const endAngle = ((i + 360 / segments) * Math.PI) / 180;
       
+      // get the segment's first point on the circumference 
       const x1 = centerX + radius * Math.cos(startAngle);
       const y1 = centerY + radius * Math.sin(startAngle);
-      
+
+      // get the segment's second point on the curcumference 
       const x2 = centerX + radius * Math.cos(endAngle);
       const y2 = centerY + radius * Math.sin(endAngle);
       
+      // make a SVG path string that:
+        //moves to center of the circle 
+        //draws a line from center to first point
+        //draws an arc from first point to second point
+        //close the segment with a line back to center 
       const path = `M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`;
       
+      // make a SVG path element and add it to the array
       segmentElements.push(
         <path 
           key={i} 
