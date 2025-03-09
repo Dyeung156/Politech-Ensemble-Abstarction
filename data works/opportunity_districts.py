@@ -51,34 +51,50 @@ def opportunity_district_maps(file_path):
     cur_map = 0 
     num_districts = util.get_num_districts(file_path)
     
+    max_hispanic = 0
+    max_black = 0
+    max_white = 0
+    
     #go thru each row in the dataframe
     while row < len(df): 
-        map_tuple = str(create_map_tuple(df, num_districts, row))
+        map_tuple = create_map_tuple(df, num_districts, row)
         
-        if map_tuple not in maps_info:
-            maps_info[map_tuple] = [cur_map]
+        if map_tuple[HISPANIC] > max_hispanic:
+            max_hispanic = map_tuple[HISPANIC]
+        if map_tuple[BLACK] > max_black:
+            max_black = map_tuple[BLACK]
+        if map_tuple[WHITE] > max_white:
+            max_white = map_tuple[WHITE]
+        
+        str_tuple = str(map_tuple)
+        
+        if str_tuple not in maps_info:
+            maps_info[str_tuple] = [cur_map]
         else:
-            maps_info[map_tuple].append(cur_map)
+            maps_info[str_tuple].append(cur_map)
         
         #move row to the next map
         row += num_districts
         cur_map+=1
         
+    maps_info["max"] = [max_hispanic, max_black, max_white]
     return maps_info
     
 if __name__ == "__main__":
-    file_path = "output.csv"
+    file_path = "data works/output.csv"
     opportunity_maps = opportunity_district_maps(file_path)
 
     #upload the dictionary to a JSON file
-    with open("opportunity_district_data.json", "w") as json_file:
+    with open("data works/opportunity_district_data.json", "w") as json_file:
         json.dump(opportunity_maps, json_file, indent=4)
         
-    # with open("opportunity_district_data.json", "r") as json_file:
+    # with open("data works/opportunity_district_data.json", "r") as json_file:
     #     data = json.load(json_file)
         
-    # for row in data:
-    #     print(row)
+    # for key, value in data.items():
+    #     print(key)
+    #     if key == "max":
+    #         print(value)
 
         
         
