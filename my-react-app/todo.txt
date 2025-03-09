@@ -1,0 +1,7 @@
+#Opportunity Districts 
+-maybe change the rbg value mapping to hsa values
+-maybe use a Maxwell color triangle
+
+#2nd tab
+-add a cluster overview 
+-add a "representative" overview (avg of everything)
