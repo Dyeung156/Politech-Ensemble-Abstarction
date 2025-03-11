@@ -58,7 +58,10 @@ export default function ColorTriangle() {
 
       {
         clusterValues.map((cluster, index) => (
-          <ClusterButton key = {index} point = {createCoodrinates(strToArr(cluster[0]))} mapData={cluster} />
+          <ClusterButton key = {index} 
+          point = {createCoodrinates(strToArr(cluster[0]))} 
+          mapData={cluster} 
+          class = "tooltip"/>
         ))
       }
       

@@ -1,7 +1,10 @@
 import React from "react";
+import { useState } from "react";
 
 // Generate buttons based on RGB points
 export default function ClusterButton({ point, mapData }) {
+  const [showTuple, setShowTuple] = useState(false);
+
   const { x, y } = point;
 
   function buttonClick()
@@ -24,12 +27,15 @@ export default function ClusterButton({ point, mapData }) {
           // filter: selectedButton === id ? 'drop-shadow(0 0 4px rgba(255,255,255,0.8))' : 'none'
         }}
       onClick={buttonClick}
+
+      onMouseEnter={() => setShowTuple(true)}
+      onMouseLeave={() => setShowTuple(false)}
       />
 
       {/* Label text */}
-      <text
-        x={x}
-        y={y}
+      {showTuple && <text
+        x={x + 10}
+        y={y - 10}
         textAnchor="middle"
         dominantBaseline="central"
         fill = "#000"
@@ -37,8 +43,10 @@ export default function ClusterButton({ point, mapData }) {
         fontWeight="bold"
         pointerEvents="none"
       >
-        {/* {label} */}
-      </text>
+        {mapData[0]}
+      </text>}
+
+
     </g>
   );
 }
