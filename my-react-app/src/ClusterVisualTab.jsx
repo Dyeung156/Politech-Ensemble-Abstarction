@@ -6,8 +6,6 @@ import opportunity_district_data from "./opportunity_district_data.json"
 
 export default function ClusterVisualTab() {
     const data = Object.entries(opportunity_district_data);
-    const [curr_map, setMap] = useState(data[0]);
-    const [max_values] = useState(data[data.length - 1])
 
     useEffect(() => {
         // console.log(curr_map[1]);
@@ -16,23 +14,22 @@ export default function ClusterVisualTab() {
     }, [])
 
 
-    const generateButtons = () => {
-        return(
-        <>
-            {data.map( ([keys, value], index) => (
-                <button  key={index} onClick = {() => {setMap(data[index])}}>
-                    Values: {keys}
-                </button>
-            ))}
-        </>);
-    }
+    // const generateButtons = () => {
+    //     return(
+    //     <>
+    //         {data.map( ([keys, value], index) => (
+    //             <button  key={index} onClick = {() => {setMap(data[index])}}>
+    //                 Values: {keys}
+    //             </button>
+    //         ))}
+    //     </>);
+    // }
 
 
     return (
         <>
-            {generateButtons()}
             <div>
-                <ColorTriangle map = {curr_map} max = {max_values[1]}/>
+                <ColorTriangle />
             </div>
         </>
 

@@ -1,41 +1,26 @@
 import React from "react";
+import ClusterButton from "./ClusterButton";
 import { strToArr } from "./util";
+import opportunity_district_data from "./opportunity_district_data.json"
 
-export default function ColorTriangle({ map, max }) {
+export default function ColorTriangle() {
+  const data = Object.entries(opportunity_district_data);
+  const max = data[data.length - 1][1];
+  const clusterValues = data.slice(0, -1);
+
   const polylineConfigs = [
-    { id: 1, points : segmentPoints("Hispanic", map, max), fill : "url(#redGradient)"},
-    { id: 2, points : segmentPoints("Black", map, max), fill : "url(#greenGradient)"},
-    { id: 3, points : segmentPoints("White", map, max), fill : "url(#blueGradient)"}
+    { id: 1, points : "150,10 80,130 150,150 220,130", fill : "url(#redGradient)"},
+    { id: 2, points : "10,250 80,130 150,150 150,250", fill : "url(#greenGradient)"},
+    { id: 3, points : "290,250 220,130 150,150 150,250", fill : "url(#blueGradient)"}
   ];
 
-  function segmentPoints(segment, map, max){
-    const mapTuple = strToArr(map[0]);
-    const sizeFactor = Math.max(...max);
+  function createCoodrinates(mapTuple)
+  {
+    // the small decimal add is to prevent dividing by 0 error 
+    let xValue = 150 + 140 * (mapTuple[2] / (max[2] + 0.00000001)) - 140 * (mapTuple[1] / (max[1] + 0.00000001));
+    let yValue = 150 + 100 * (mapTuple[2] / (max[2] + 0.00000001)) - 140 * (mapTuple[0] / (max[0] + 0.00000001));
 
-    let xValue = 0;
-    let yValue = 0;
-    let otherPoints = "";
-    switch (segment)
-    {
-      case "Hispanic":
-        xValue = 150;
-        yValue = 150 - 140 * (mapTuple[0] / sizeFactor);
-        otherPoints = "80,130 150,150 220,130";
-        break;
-      case "Black":
-        xValue = 150 - 140 * (mapTuple[1] / sizeFactor);
-        yValue = 150 + 100 * (mapTuple[1] / sizeFactor);
-        otherPoints = "80,130 150,150 150,250";
-        break;
-      case "White":
-        xValue = 150 + 140 * (mapTuple[2] / sizeFactor);
-        yValue = 150 + 100 * (mapTuple[2] / sizeFactor);
-        otherPoints = "220,130 150,150 150,250"; 
-        break;
-    }
-
-    return `${xValue},${yValue} ${otherPoints}`;
-    
+    return {x: xValue, y : yValue};
   }
 
   return (
@@ -65,14 +50,18 @@ export default function ColorTriangle({ map, max }) {
       />
 
       {/* Apply color gradients */}
-      {/* <polyline points = {segmentPoints("Hispanic", map, max)} fill="url(#redGradient)" />
-      <polyline points = {segmentPoints("Black", map, max)} fill="url(#greenGradient)" />
-      <polyline points = {segmentPoints("White", map, max)} fill="url(#blueGradient)" /> */}
       {
         polylineConfigs.map((config) => (
           <polyline key = {config.id} points = {config.points} fill = {config.fill}/>
         ))
       }
+
+      {
+        clusterValues.map((cluster, index) => (
+          <ClusterButton key = {index} point = {createCoodrinates(strToArr(cluster[0]))} mapData={cluster} />
+        ))
+      }
+      
     </svg>
   );
 }

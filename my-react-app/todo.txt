@@ -2,6 +2,12 @@
 -maybe change the rbg value mapping to hsa values
 -maybe use a Maxwell color triangle
 
+-use dots to rep each cluster instead
+-use the circle again 
+-have x value = (x-center of circle) * abs([(white percentage factor) - (black percentage factor)])
+-have y value = (y center of circle) * abs([(white percentage facotr) - (hispanic percentage factor)])
+
 #2nd tab
 -add a cluster overview 
 -add a "representative" overview (avg of everything)
+
