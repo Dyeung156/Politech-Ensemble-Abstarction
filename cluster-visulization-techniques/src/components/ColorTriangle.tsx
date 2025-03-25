@@ -1,7 +1,6 @@
-import React from "react";
 import ClusterButton from "./ClusterButton";
-import { strToArr } from "./util";
-import opportunity_district_data from "./assets/opportunity_district_data.json"
+import { strToArr } from "@/util/deserialize";
+import opportunity_district_data from "@/assets/opportunity_district_data.json";
 
 export default function ColorTriangle() {
   const data = Object.entries(opportunity_district_data);
@@ -9,19 +8,10 @@ export default function ColorTriangle() {
   const clusterValues = data.slice(0, -1);
 
   const polylineConfigs = [
-    { id: 1, points : "150,10 80,130 150,150 220,130", fill : "url(#redGradient)"},
-    { id: 2, points : "10,250 80,130 150,150 150,250", fill : "url(#greenGradient)"},
-    { id: 3, points : "290,250 220,130 150,150 150,250", fill : "url(#blueGradient)"}
+    { id: 1, points: "150,10 80,130 150,150 220,130", fill: "url(#redGradient)" },
+    { id: 2, points: "10,250 80,130 150,150 150,250", fill: "url(#greenGradient)" },
+    { id: 3, points: "290,250 220,130 150,150 150,250", fill: "url(#blueGradient)" }
   ];
-
-  function createCoodrinates(mapTuple)
-  {
-    // the small decimal add is to prevent dividing by 0 error 
-    let xValue = 150 + 140 * (mapTuple[2] / (max[2] + 0.00000001)) - 140 * (mapTuple[1] / (max[1] + 0.00000001));
-    let yValue = 150 + 100 * (mapTuple[2] / (max[2] + 0.00000001)) - 140 * (mapTuple[0] / (max[0] + 0.00000001));
-
-    return {x: xValue, y : yValue};
-  }
 
   return (
     <svg width="300" height="300" viewBox="0 0 300 300">
@@ -52,19 +42,27 @@ export default function ColorTriangle() {
       {/* Apply color gradients */}
       {
         polylineConfigs.map((config) => (
-          <polyline key = {config.id} points = {config.points} fill = {config.fill}/>
+          <polyline key={config.id} points={config.points} fill={config.fill} />
         ))
       }
 
       {
         clusterValues.map((cluster, index) => (
-          <ClusterButton key = {index} 
-          point = {createCoodrinates(strToArr(cluster[0]))} 
-          mapData={cluster} 
-          class = "tooltip"/>
+          <ClusterButton key={index}
+            point={createCoodrinates(strToArr(cluster[0]), max)}
+            mapData={cluster}
+            className="tooltip bg-amber-100" />
         ))
       }
-      
+
     </svg>
   );
+}
+
+function createCoodrinates(mapTuple: number[], max: number[]) {
+  // the small decimal add is to prevent dividing by 0 error 
+  let xValue = 150 + 140 * (mapTuple[2] / (max[2] + 0.00000001)) - 140 * (mapTuple[1] / (max[1] + 0.00000001));
+  let yValue = 150 + 100 * (mapTuple[2] / (max[2] + 0.00000001)) - 140 * (mapTuple[0] / (max[0] + 0.00000001));
+
+  return { x: xValue, y: yValue };
 }

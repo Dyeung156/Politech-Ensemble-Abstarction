@@ -1,18 +1,11 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import ColorTriangle from "./ColorTriangle";
-import opportunity_district_data from "./assets/opportunity_district_data.json"
-
-import ColorWheel from "./ColorWheel"
-
 
 export default function ClusterVisualTab() {
-    const data = Object.entries(opportunity_district_data);
-
     useEffect(() => {
         // console.log(curr_map[1]);
         // console.log(max_values)
-    
+
     }, [])
 
 
