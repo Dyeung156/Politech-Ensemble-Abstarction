@@ -28,6 +28,7 @@
       "@/assets/*": ["./src/assets/*"],
       "@/components/*": ["./src/components/*"],
       "@/util/*": ["./src/util/*"],
+      "@/redux/*": ["./src/redux/*"],
     }
   },
   "include": ["src"]

@@ -1,2 +1,8 @@
 Libaraies 
--react redux
+-react redux 
+-tailwind 
+-figma prototype
+-panel libary -> https://github.com/bvaughn/react-resizable-panels
+-learn css grid and flex box -> https://flexboxfroggy.com/
+
+Fix Triangle median point 
