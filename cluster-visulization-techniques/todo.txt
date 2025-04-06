@@ -6,3 +6,6 @@ Libaraies
 -learn css grid and flex box -> https://flexboxfroggy.com/
 
 Fix Triangle median point 
+
+the react redux with typescript guide 
+https://www.smashingmagazine.com/2023/05/guide-redux-toolkit-typescript/

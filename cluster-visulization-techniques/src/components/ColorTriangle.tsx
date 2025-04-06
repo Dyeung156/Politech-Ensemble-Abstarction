@@ -1,16 +1,69 @@
 import ClusterButton from "./ClusterButton";
 import { strToArr } from "@/util/deserialize";
 import opportunity_district_data from "@/assets/opportunity_district_data.json";
+import {pointArrToStr} from "@/util/pointType"
+import type point from "@/util/pointType"
+
+function makeTrianglePoints(bottomLeft: point, length: number): point[]
+{
+  const botX = bottomLeft.x
+  const botY = bottomLeft.y
+
+  const rightPoint: point = {
+    x: botX + length, 
+    y: botY
+  }
+
+  //math part is to get height of an equilateral triangle 
+  const topPoint: point = {
+    x: botX + 0.5 * length,
+    y: botY - 0.5 * Math.tan(Math.PI / 3) * length
+  }
+
+  return [bottomLeft, rightPoint, topPoint]
+}
+
+function makePolygonPoints(trianglePoints: point[]): point[][]
+{
+  const leftEdgeMedian: point = {x: 0.5 * (trianglePoints[0].x + trianglePoints[2].x), 
+                                 y: 0.5 * (trianglePoints[0].y + trianglePoints[2].y)}
+  const rightEdgeMedian: point = {x: 0.5 * (trianglePoints[1].x + trianglePoints[2].x), 
+                                  y: 0.5 * (trianglePoints[1].y + trianglePoints[2].y)}    
+  const baseEdgeMedian: point = {x: 0.5 * (trianglePoints[0].x + trianglePoints[1].x), 
+                                y: 0.5 * (trianglePoints[0].y + trianglePoints[1].y)}     
+  const triangleMedian: point = {x: trianglePoints[2].x,
+                                y: trianglePoints[0].y - (trianglePoints[0].y - trianglePoints[2].y) / 3}       
+
+  const greenPolygon: point[] = [trianglePoints[0], leftEdgeMedian, triangleMedian, baseEdgeMedian]
+  const bluePolygon: point[] = [trianglePoints[1], rightEdgeMedian, triangleMedian, baseEdgeMedian, ]
+  const redPolygon: point[] = [trianglePoints[2], leftEdgeMedian, triangleMedian, rightEdgeMedian, ]
+
+  return [greenPolygon, bluePolygon, redPolygon]
+}
+
+function createCoodrinates(mapTuple: number[], max: number[]) {
+  // the small decimal add is to prevent dividing by 0 error 
+  let xValue = 150 + 140 * (mapTuple[2] / (max[2] + 0.00000001)) - 140 * (mapTuple[1] / (max[1] + 0.00000001));
+  let yValue = 150 + 100 * (mapTuple[2] / (max[2] + 0.00000001)) - 140 * (mapTuple[0] / (max[0] + 0.00000001));
+
+  return { x: xValue, y: yValue };
+}
 
 export default function ColorTriangle() {
   const data = Object.entries(opportunity_district_data);
   const max = data[data.length - 1][1];
   const clusterValues = data.slice(0, -1);
+  
+  const bottomPoint: point = {x: 0, y: 300}
+  const trianglePoints: point[] = makeTrianglePoints(bottomPoint, 300)
+  const polygonPoints: point[][] = makePolygonPoints(trianglePoints)
+
+  console.log(polygonPoints)
 
   const polylineConfigs = [
-    { id: 1, points: "150,10 80,130 150,150 220,130", fill: "url(#redGradient)" },
-    { id: 2, points: "10,250 80,130 150,150 150,250", fill: "url(#greenGradient)" },
-    { id: 3, points: "290,250 220,130 150,150 150,250", fill: "url(#blueGradient)" }
+    { id: 1, points: pointArrToStr(polygonPoints[2]), fill: "url(#redGradient)" },
+    { id: 2, points: pointArrToStr(polygonPoints[0]), fill: "url(#greenGradient)" },
+    { id: 3, points: pointArrToStr(polygonPoints[1]), fill: "url(#blueGradient)" }
   ];
 
   return (
@@ -33,7 +86,7 @@ export default function ColorTriangle() {
 
       {/* Draw the triangle */}
       <polygon
-        points="150,10 10,250 290,250"
+        points = {pointArrToStr(trianglePoints)} //"150,10 10,250 290,250"
         fill="black"
         stroke="white"
         strokeWidth="2"
@@ -59,10 +112,3 @@ export default function ColorTriangle() {
   );
 }
 
-function createCoodrinates(mapTuple: number[], max: number[]) {
-  // the small decimal add is to prevent dividing by 0 error 
-  let xValue = 150 + 140 * (mapTuple[2] / (max[2] + 0.00000001)) - 140 * (mapTuple[1] / (max[1] + 0.00000001));
-  let yValue = 150 + 100 * (mapTuple[2] / (max[2] + 0.00000001)) - 140 * (mapTuple[0] / (max[0] + 0.00000001));
-
-  return { x: xValue, y: yValue };
-}
