@@ -14,10 +14,14 @@ export const clusterSlice = createSlice({
     reducers: {
         addCluster: (state, action: PayloadAction<[string, number[]]>) => {
             const incomingCluster = action.payload;
+            const incomingMapTuple = action.payload[0];
+            const previousMapTuples = state.clusters.map(([key]) => key);
+            
+            // check if the incoming map tuple is already included 
+            if (previousMapTuples.includes(incomingMapTuple))
+                return
 
-            // check if the incoming cluster is new 
-            if (!state.clusters.includes(incomingCluster))
-                state.clusters.push(incomingCluster);
+            state.clusters.push(incomingCluster);
             
         },
         deleteCluster: (state, action: PayloadAction<[string, number[]]>) => {
