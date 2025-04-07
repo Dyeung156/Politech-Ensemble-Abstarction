@@ -1,6 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import clusterSlice from "@/redux/clusterSlice"
 import mapIndicesSlice from "@/redux/mapIndicesSlice"
+import {enableMapSet} from "immer"
+
+enableMapSet()
 
 export const store = configureStore({
     reducer: {

@@ -1,4 +1,7 @@
 import { useState } from "react";
+import {useDispatch, useSelector } from "react-redux"
+import { RootState } from "@/redux/index";
+import {addCluster} from "@/redux/clusterSlice"
 
 interface ClusterButtonProps {
   point: {
@@ -14,11 +17,14 @@ interface ClusterButtonProps {
  */
 export default function ClusterButton({ point, mapData, className }: ClusterButtonProps) {
   const [showTuple, setShowTuple] = useState(false);
-
   const { x, y } = point;
+  const dispatch = useDispatch()
+  const clusterList = useSelector((state: RootState) => state.clusters.clusters)
 
-  function buttonClick() {
+  const buttonClick = () => {
+    dispatch(addCluster(mapData))
     console.log(mapData);
+    console.log(clusterList)
   }
 
   return (

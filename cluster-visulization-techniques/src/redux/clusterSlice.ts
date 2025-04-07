@@ -2,37 +2,28 @@ import { createSlice } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
 
 export interface selectedClusters{
-    clusters: Map<string, number[]>
+    clusters: [string, number[]][]
 }
 const initialState: selectedClusters = {
-    clusters: new Map<string, number[]>()
+    clusters: []
 }
 
 export const clusterSlice = createSlice({
     name: "clusters",
     initialState,
     reducers: {
-        addCluster: (state, action: PayloadAction<Map<string, number[]>>) => {
+        addCluster: (state, action: PayloadAction<[string, number[]]>) => {
             const incomingCluster = action.payload;
-            
-            //incoming cluster will always have 1 key so can extract it directly 
-            const clusterTuple = Array.from(incomingCluster.keys())[0];
-            // mapIndices will never be undefined, hence the !
-            const mapIndices = incomingCluster.get(clusterTuple)!;
 
-            // check if clusterTuple is NOT in clusters yet
-            if (!state.clusters.has(clusterTuple))
-                state.clusters.set(clusterTuple, mapIndices);
+            // check if the incoming cluster is new 
+            if (!state.clusters.includes(incomingCluster))
+                state.clusters.push(incomingCluster);
             
         },
-        deleteCluster: (state, action: PayloadAction<Map<string, number[]>>) => {
-            const incomingCluster = action.payload;
+        deleteCluster: (state, action: PayloadAction<[string, number[]]>) => {
+            const clusterTuple = action.payload[0];
             
-            //incoming cluster will always have 1 key so can extract it directly 
-            const clusterTuple = Array.from(incomingCluster.keys())[0];
-            // if the cluster tuple was not in state, notify thru the console 
-            if (!state.clusters.delete(clusterTuple))
-                console.log(`${clusterTuple} was not found for some reason.`)
+            state.clusters.filter(([str, _]) => str != clusterTuple);
         }
     }
 })

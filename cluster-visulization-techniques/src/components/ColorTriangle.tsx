@@ -50,15 +50,11 @@ function createCoodrinates(mapTuple: number[], max: number[]) {
 }
 
 export default function ColorTriangle() {
-  const data = Object.entries(opportunity_district_data);
-  const max = data[data.length - 1][1];
-  const clusterValues = data.slice(0, -1);
-  
-  const bottomPoint: point = {x: 0, y: 300}
-  const trianglePoints: point[] = makeTrianglePoints(bottomPoint, 300)
-  const polygonPoints: point[][] = makePolygonPoints(trianglePoints)
-
-  console.log(polygonPoints)
+  const clusterValues = Object.entries(opportunity_district_data)
+  const max = clusterValues.pop()
+  const bottomPoint: point = {x: 0, y: 300};
+  const trianglePoints: point[] = makeTrianglePoints(bottomPoint, 300);
+  const polygonPoints: point[][] = makePolygonPoints(trianglePoints);
 
   const polylineConfigs = [
     { id: 1, points: pointArrToStr(polygonPoints[2]), fill: "url(#redGradient)" },
@@ -100,12 +96,15 @@ export default function ColorTriangle() {
       }
 
       {
-        clusterValues.map((cluster, index) => (
-          <ClusterButton key={index}
-            point={createCoodrinates(strToArr(cluster[0]), max)}
-            mapData={cluster}
+        Array.from(clusterValues).map((clusterPair, index) => {
+          if (clusterPair[0] == "max")
+            return null
+
+          return <ClusterButton key={index}
+            point={createCoodrinates(strToArr(clusterPair[0]), max![1])}
+            mapData={clusterPair}
             className="tooltip bg-amber-100" />
-        ))
+        })
       }
 
     </svg>
