@@ -20,9 +20,9 @@ export const mapIndicesSlice = createSlice({
         },
         deleteMapIndex: (state, action: PayloadAction<number>) => {
             const mapIndex = action.payload
-            //check that the map index is in the state before splicing the array 
+            //check that the map index is in the state before filtering the array 
             if (state.mapIndices.includes(mapIndex))
-                state.mapIndices.splice(mapIndex)
+                state.mapIndices.filter(num => num !== mapIndex)
         } 
     }
 }) 

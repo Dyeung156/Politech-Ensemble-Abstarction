@@ -41,10 +41,16 @@ function makePolygonPoints(trianglePoints: point[]): point[][]
   return [greenPolygon, bluePolygon, redPolygon]
 }
 
-function createCoodrinates(mapTuple: number[], max: number[]) {
+function createCoodrinates(triangleVertices: point[], mapTuple: number[], max: number[]) {
+  const triangleMedian: point = {x: triangleVertices[2].x,
+                                y: triangleVertices[0].y - (triangleVertices[0].y - triangleVertices[2].y) / 3};
   // the small decimal add is to prevent dividing by 0 error 
-  let xValue = 150 + 140 * (mapTuple[2] / (max[2] + 0.00000001)) - 140 * (mapTuple[1] / (max[1] + 0.00000001));
-  let yValue = 150 + 100 * (mapTuple[2] / (max[2] + 0.00000001)) - 140 * (mapTuple[0] / (max[0] + 0.00000001));
+  const xPercentage = (mapTuple[2] / (max[2] + 0.00000001)) - (mapTuple[1] / (max[1] + 0.00000001));
+  const yPercentage = (mapTuple[2] / (max[2] + 0.00000001)) - (mapTuple[0] / (max[0] + 0.00000001));
+  //math = how far left or right the point is from triangle median 
+  let xValue = triangleMedian.x + triangleMedian.x * xPercentage;
+  //math = how far up or down the point is from triangle median 
+  let yValue = triangleMedian.y + (triangleVertices[0].y - triangleMedian.y) * yPercentage;
 
   return { x: xValue, y: yValue };
 }
@@ -63,7 +69,7 @@ export default function ColorTriangle() {
   ];
 
   return (
-    <svg width="300" height="300" viewBox="0 0 300 300">
+    <svg width="300" height="300" viewBox="0 0 300 310">
       {/* Define the color gradients */}
       <defs>
         <linearGradient id="redGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -101,7 +107,7 @@ export default function ColorTriangle() {
             return null
 
           return <ClusterButton key={index}
-            point={createCoodrinates(strToArr(clusterPair[0]), max![1])}
+            point={createCoodrinates(trianglePoints, strToArr(clusterPair[0]), max![1])}
             mapData={clusterPair}
             className="tooltip bg-amber-100" />
         })

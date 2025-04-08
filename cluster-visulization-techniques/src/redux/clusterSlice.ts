@@ -24,10 +24,10 @@ export const clusterSlice = createSlice({
             state.clusters.push(incomingCluster);
             
         },
-        deleteCluster: (state, action: PayloadAction<[string, number[]]>) => {
-            const clusterTuple = action.payload[0];
+        deleteCluster: (state, action: PayloadAction<string>) => {
+            const clusterTuple = action.payload;
             
-            state.clusters.filter(([str, _]) => str != clusterTuple);
+            state.clusters = state.clusters.filter(([str, _]) => str !== clusterTuple);
         }
     }
 })

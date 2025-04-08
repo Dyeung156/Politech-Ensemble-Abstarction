@@ -18,13 +18,11 @@ interface ClusterButtonProps {
 export default function ClusterButton({ point, mapData, className }: ClusterButtonProps) {
   const [showTuple, setShowTuple] = useState(false);
   const { x, y } = point;
-  const dispatch = useDispatch()
-  const clusterList = useSelector((state: RootState) => state.clusters.clusters)
+  const dispatch = useDispatch();
+  // const clusterList = useSelector((state: RootState) => state.clusters.clusters)
 
   const buttonClick = () => {
     dispatch(addCluster(mapData))
-    console.log(mapData);
-    console.log(clusterList)
   }
 
   return (
