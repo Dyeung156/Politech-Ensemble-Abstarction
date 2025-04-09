@@ -1,14 +1,10 @@
-import ClusterDetails from "./ClusterDetails";
-import ClusterDetailsTab from "./ClusterDetailsTab";
 import ColorTriangle from "./ColorTriangle";
 
 export default function ClusterVisualTab() {
     return (
         <>
-            <div>
+            <div className = "flex justify-center items-center">
                 <ColorTriangle />
-                {/* <ColorWheel /> */}
-                <ClusterDetailsTab/>
             </div>
         </>
 
