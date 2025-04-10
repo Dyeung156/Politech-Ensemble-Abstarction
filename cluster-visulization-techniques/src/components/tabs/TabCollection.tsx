@@ -20,17 +20,17 @@ export default function TabCollection() {
 
             <PanelResizeHandle className = "outline-black w-1"/>
 
-           {clusters.length && <Panel className="bg-gray-300 w-3/4 p-4 overflow-y-auto">
+            {clusters.length > 0 ? <Panel className="bg-gray-300 w-3/4 p-4 overflow-y-auto">
                 <h2 className="text-lg font-semibold mb-4 text-center">Cluster Details</h2>
                 <ClusterDetailsTab/>
-            </Panel>}
+            </Panel> : null}
 
             <PanelResizeHandle className = "outline-black w-1"/>
 
-            {maps.length && <Panel className="bg-gray-300 w-3/4 p-4 overflow-y-auto">
+            {maps.length > 0 ? <Panel className="bg-gray-300 w-3/4 p-4 overflow-y-auto">
                 <h2 className="text-lg font-semibold mb-4 text-center">Map Indices</h2>
                 <MapDetailsTab/>
-            </Panel> }
+            </Panel> : null}
         </PanelGroup>
     );
 }

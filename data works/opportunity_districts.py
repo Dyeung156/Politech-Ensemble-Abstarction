@@ -39,6 +39,13 @@ def create_map_tuple(df , num_districts : int, row : int):
     
     return tuple(district_counts)
 
+#Description: returns a string representation of the map tuple
+#Parameters: map_tuple (tuple) - the map tuple that describes the map
+#returns: str - string representation of the map tuple
+#         format: "hispanic-black-white"
+def map_tuple_to_str(map_tuple):
+    return f"{map_tuple[HISPANIC]}-{map_tuple[BLACK]}-{map_tuple[WHITE]}"
+
 #Description: returns a dict describing the ensemble based on opportunity districts
 #parameters: file_path (str) - path to the csv file 
 #returns: dict - key = str of the map tuple (hispanic districts, black districts, white districts)
@@ -66,7 +73,7 @@ def opportunity_district_maps(file_path):
         if map_tuple[WHITE] > max_white:
             max_white = map_tuple[WHITE]
         
-        str_tuple = str(map_tuple)
+        str_tuple = map_tuple_to_str(map_tuple)
         
         
         if str_tuple not in maps_info:

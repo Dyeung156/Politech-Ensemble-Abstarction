@@ -22,7 +22,7 @@ export const mapIndicesSlice = createSlice({
             const mapIndex = action.payload
             //check that the map index is in the state before filtering the array 
             if (state.mapIndices.includes(mapIndex))
-                state.mapIndices.filter(num => num !== mapIndex)
+                state.mapIndices = state.mapIndices.filter(num => num !== mapIndex)
         } 
     }
 }) 
