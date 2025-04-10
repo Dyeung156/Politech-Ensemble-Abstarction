@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import ColorTriangle from './ColorTriangle';
+import ColorTriangle from '../components/ColorTriangle';
 import { Provider } from 'react-redux';
 import { store } from '../redux';
 

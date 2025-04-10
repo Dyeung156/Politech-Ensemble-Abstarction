@@ -1,6 +1,6 @@
 import { Provider } from "react-redux";
 import {store} from "@/redux/index"
-import TabCollection from "@/components/TabCollection";
+import TabCollection from "@/components/tabs/TabCollection";
 
 export default function App() {
   return (

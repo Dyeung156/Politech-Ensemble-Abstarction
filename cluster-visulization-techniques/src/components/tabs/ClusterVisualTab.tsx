@@ -1,4 +1,4 @@
-import ColorTriangle from "./ColorTriangle";
+import ColorTriangle from "../ColorTriangle";
 
 export default function ClusterVisualTab() {
     return (

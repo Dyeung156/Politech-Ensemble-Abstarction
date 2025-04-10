@@ -1,4 +1,5 @@
 import { deleteCluster } from "@/redux/clusterSlice"
+import { addMapIndex } from "@/redux/mapIndicesSlice";
 import { useDispatch } from "react-redux";
 import Accordion from "./Accordion";
 
@@ -12,7 +13,9 @@ export default function ClusterDetails({ mapTuple, mapIndices }: AccordionValues
 
     return (
         <Accordion title={mapTuple} onDelete={deleteButton} >
-            {mapIndices.map((mapValue, index) => <button key={index}>{mapValue}</button>)}
+            {mapIndices.map((mapValue, index) => 
+            <button className="border border-gray-300 rounded px-2 py-1 hover:border-gray-500" 
+            key={index} onClick={() => dispatch(addMapIndex(mapValue))}>{mapValue}</button>)}
         </Accordion>
     )
 }
