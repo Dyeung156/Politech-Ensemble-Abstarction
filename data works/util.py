@@ -12,3 +12,14 @@ def get_num_districts(file_path) -> int:
         if df.iloc[row_index]["District"] == 1:
             #the dataframe is 0-indexed so the current row index would suffice
             return row_index   
+
+#Description: logic for adding a value to a dictionary
+#parameters: dictionary (dict) - the dictionary to add to
+#            key (str) - the key to add the value to
+#            value (int) - the value to add to the dictionary
+#returns: none
+def add_to_dict(dictionary, key, value):
+    if key in dictionary:
+        dictionary[key].append(value)
+    else:
+        dictionary[key] = [value]
