@@ -10,9 +10,9 @@ load_dotenv()
 THRESHOLD = float(os.getenv("THRESHOLD"))
 
 ethnic_groups = ["RacialDemographic.HISPA","RacialDemographic.BLACK", "RacialDemographic.ASIAN"]
-HISPANIC = 0
+# HISPANIC = 0
 BLACK = 1
-ASIAN = 2
+# ASIAN = 2
 
 def black_opportunity_districts(df , num_districts : int, row : int):
     district_counts = 0
@@ -28,10 +28,7 @@ def black_opportunity_districts(df , num_districts : int, row : int):
     
     return district_counts
 
-#Description: returns a tuple with the dictonaries for each ethnic group percents in the map
-#parameters: file_path (str) - path to the csv file 
-#returns: tuple (hispanic, black, asian) - dictionaries with the average percents of each group in the map
-def group_percent_dicts(file_path):
+def opportunity_districts__dicts(file_path):
     df = pd.read_csv(file_path) 
     black_dict = dict()
 
@@ -52,14 +49,13 @@ def group_percent_dicts(file_path):
     return black_dict
     
 def make_JSON():
-    file_path = "data works/output.csv"
-    black_dict= group_percent_dicts(file_path)
+    file_path = "data works\Actual Data\output.csv"
+    black_dict= opportunity_districts__dicts(file_path)
     
     #upload the dictionary to a JSON file
-    with open("data works/black_opportunity_districts.json", "w") as json_file:
+    with open("data works\Actual Data\\black_opportunity_districts.json", "w") as json_file:
         json.dump(black_dict, json_file, indent=4)
 
-        
 if __name__ == "__main__":
     make_JSON()
         

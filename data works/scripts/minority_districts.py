@@ -40,11 +40,11 @@ def group_percent_dicts(file_path):
     return map_dict
     
 def make_JSON():
-    file_path = "data works/output.csv"
+    file_path = "data works\Actual Data\output.csv"
     map_dict= group_percent_dicts(file_path)
     
     #upload the dictionary to a JSON file
-    with open("data works/ethnic_group_majority_data.json", "w") as json_file:
+    with open("data works\Actual Data\ethnic_group_majority_data.json", "w") as json_file:
         json.dump(map_dict, json_file, indent=4)
 
         

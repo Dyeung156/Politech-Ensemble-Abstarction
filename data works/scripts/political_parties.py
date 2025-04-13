@@ -46,15 +46,15 @@ def political_parties_dict(file_path):
     return democratic_dict, republician_dict
 
 def make_JSON():
-    file_path = "data works\output.csv"
+    file_path = "data works\Actual Data\output.csv"
     democratic_dict, republician_dict = political_parties_dict(file_path)
     
     #upload the democrat dictionary to a JSON file 
-    with open("data works\democrat_clusters.json", "w") as json_file:
+    with open("data works\Actual Data\democrat_clusters.json", "w") as json_file:
         json.dump(democratic_dict, json_file, indent=4)
     
     #upload the republician dictionary to a JSON file 
-    with open("data works\\republican_clusters.json", "w") as json_file:
+    with open("data works\Actual Data\\republican_clusters.json", "w") as json_file:
         json.dump(republician_dict, json_file, indent=4)
 
 if __name__ == "__main__":

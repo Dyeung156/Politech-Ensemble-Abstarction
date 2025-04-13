@@ -86,7 +86,7 @@ def extract_values(content, map_index):
     fieldnames = ["Map"] + fieldnames
     
     # Open a new CSV file to write to
-    with open('data works/output.csv', mode='a', newline='') as outfile:
+    with open('data works\Actual Data\output.csv', mode='a', newline='') as outfile:
         csv_writer = csv.DictWriter(outfile, fieldnames=fieldnames)
 
         # Write the header (field names)
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     file_paths = list_files_in_folder(PROJECT_ID, FOLDER_PATH, BRANCH)
 
     #file that will contain the CSV values
-    csv_path = "data works/output.csv"
+    csv_path = "data works\Actual Data\output.csv"
     
     # Delete the file if it exists (to get updated values)
     if os.path.exists(csv_path):
