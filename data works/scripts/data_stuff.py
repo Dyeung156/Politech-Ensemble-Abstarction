@@ -4,7 +4,6 @@ from opportunity_districts import black_opportunity_districts
 from political_parties import party_district_counts
 from population_density import avg_pop_density
 import json
-from math import sin, cos, radians
 
 OPP_DISTRICTS = 1
 AVG_POP_DENSITY = 2
@@ -40,7 +39,7 @@ def map_percentile(map_data, data_dict: dict):
 #Returns: the distance and angle of the map in the front end visual (tuple)
 def data_placement(map_data_row, op_dict, apd_dict, dem_dict, rep_dict):
     op_percent = map_percentile(map_data_row[OPP_DISTRICTS], op_dict) 
-    pop_percent = map_percentile(map_data_row[AVG_POP_DENSITY], apd_dict)
+    pop_percent = map_percentile(int(map_data_row[AVG_POP_DENSITY] // 100000), apd_dict)
     dem_percent = map_percentile(map_data_row[DEMOCRAT_COUNT], dem_dict)
     rep_percent = map_percentile(map_data_row[REPUBLICAN_COUNT], rep_dict)
     
@@ -96,7 +95,7 @@ def create_collection_data(file_path):
         
         #add the values to the dictionaries
         util.add_to_dict(opporutunity_districts_dict, opporutunity_districts, cur_map)
-        util.add_to_dict(avg_pop_dict, avg_pop_den, cur_map)
+        util.add_to_dict(avg_pop_dict, int(avg_pop_den // 100000), cur_map)
         util.add_to_dict(democrat_dict, democrat_maps, cur_map)
         util.add_to_dict(republician_dict, republician_maps, cur_map)
         
