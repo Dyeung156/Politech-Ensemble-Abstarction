@@ -59,22 +59,10 @@ def data_placement(map_data_row, op_dict, apd_dict, dem_dict, rep_dict):
     
     return (round(avg_percent, 2) , round(weighted_avg_angle, 2))
        
-def create_JSON_files(op_dict, apd_dict, dem_dict, rep_dict):
+def create_JSON_file(dict_input, file_name):
     #upload the dictionary to a JSON file
-    with open("data works\Actual Data\\black_opportunity_districts.json", "w") as json_file:
-        json.dump(op_dict, json_file, indent=4)
-        
-    #upload the dictionary to a JSON file
-    with open("data works\Actual Data\population_density_data.json", "w") as json_file:
-        json.dump(apd_dict, json_file, indent=4)
-    
-    #upload the democrat dictionary to a JSON file 
-    with open("data works\Actual Data\democrat_clusters.json", "w") as json_file:
-        json.dump(dem_dict, json_file, indent=4)
-    
-    #upload the republician dictionary to a JSON file 
-    with open("data works\Actual Data\\republican_clusters.json", "w") as json_file:
-        json.dump(rep_dict, json_file, indent=4)
+    with open(f"data works\Actual Data\{file_name}.json", "w") as json_file:
+        json.dump(dict_input, json_file, indent=4)
 
 def cluster_avg_calculation(cluster_dict, map_data):
     cluster_measures = dict()
@@ -88,8 +76,8 @@ def cluster_avg_calculation(cluster_dict, map_data):
         
         # store the avg radius and angle for the cluster
         cluster_measures[cluster] = (radius_sum / len(map_indices), angle_sum / len(map_indices))
-        
-    cluster_dict["Cluster Measures"] = cluster_measures
+    
+    return cluster_measures
 
 def create_collection_data(file_path):
     df = pd.read_csv(file_path) 
@@ -129,18 +117,24 @@ def create_collection_data(file_path):
         radius, angle = data_placement(map_row, opporutunity_districts_dict, avg_pop_dict, democrat_dict, republician_dict)
         map_row.append(radius)
         map_row.append(angle)
-        
-    cluster_avg_calculation(opporutunity_districts_dict, map_data)
-    cluster_avg_calculation(avg_pop_dict, map_data)
-    cluster_avg_calculation(democrat_dict, map_data)
-    cluster_avg_calculation(republician_dict, map_data)
+    
+    measures_dict = dict()
+    measures_dict["Opportunity Districts"] = cluster_avg_calculation(opporutunity_districts_dict, map_data)
+    measures_dict["Average Population Density"] = cluster_avg_calculation(avg_pop_dict, map_data)
+    measures_dict["Democrat Districts"] = cluster_avg_calculation(democrat_dict, map_data)
+    measures_dict["Republician Districts"] = cluster_avg_calculation(republician_dict, map_data)
     
     map_df = pd.DataFrame(map_data, columns=["map_id", "opportunity_districts", 
                                              "avg_population_density", "democrat_count", "republican_count", 
                                              "radius", "angle"])
     map_df.to_csv("data works\Actual Data\map_data.csv", index = False)
         
-    create_JSON_files(opporutunity_districts_dict, avg_pop_dict, democrat_dict, republician_dict)
+    create_JSON_file(opporutunity_districts_dict, "opportunity_districts")
+    create_JSON_file(avg_pop_dict, "avg_population_density")
+    create_JSON_file(democrat_dict, "democrat_count")
+    create_JSON_file(republician_dict, "republican_count")
+    create_JSON_file(measures_dict, "cluster_measures")
+    
     print("Data collection complete!")
     
 if __name__ == "__main__":
