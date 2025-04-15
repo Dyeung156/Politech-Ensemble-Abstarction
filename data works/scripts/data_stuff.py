@@ -9,6 +9,9 @@ OPP_DISTRICTS = 1
 AVG_POP_DENSITY = 2
 DEMOCRAT_COUNT = 3
 REPUBLICAN_COUNT = 4
+RADIUS = 5
+ANGLE = 6
+
 
 #Description: determine the angle for where the cluster will eventually go in the front end 
 #Parameters: section - the section of the map that we are looking at (1-8)
@@ -52,9 +55,9 @@ def data_placement(map_data_row, op_dict, apd_dict, dem_dict, rep_dict):
     rep_angle = get_map_angle(REPUBLICAN_COUNT, rep_percent < 0.5) * (rep_percent / weighted_total)
     
     avg_percent = (op_percent + pop_percent + dem_percent + rep_percent) / 4
-    weighted_avg_angle = (op_angle + pop_angle + dem_angle + rep_angle) / 4
+    weighted_avg_angle = (op_angle + pop_angle + dem_angle + rep_angle) 
     
-    return (avg_percent , weighted_avg_angle)
+    return (round(avg_percent, 2) , round(weighted_avg_angle, 2))
        
 def create_JSON_files(op_dict, apd_dict, dem_dict, rep_dict):
     #upload the dictionary to a JSON file
@@ -72,7 +75,22 @@ def create_JSON_files(op_dict, apd_dict, dem_dict, rep_dict):
     #upload the republician dictionary to a JSON file 
     with open("data works\Actual Data\\republican_clusters.json", "w") as json_file:
         json.dump(rep_dict, json_file, indent=4)
-    
+
+def cluster_avg_calculation(cluster_dict, map_data):
+    cluster_measures = dict()
+    for cluster, map_indices in cluster_dict.items():
+        radius_sum = 0
+        angle_sum = 0
+        
+        for map_index in map_indices:
+            radius_sum += map_data[map_index][RADIUS]
+            angle_sum += map_data[map_index][ANGLE]
+        
+        # store the avg radius and angle for the cluster
+        cluster_measures[cluster] = (radius_sum / len(map_indices), angle_sum / len(map_indices))
+        
+    cluster_dict["Cluster Measures"] = cluster_measures
+
 def create_collection_data(file_path):
     df = pd.read_csv(file_path) 
 
@@ -100,7 +118,7 @@ def create_collection_data(file_path):
         util.add_to_dict(republician_dict, republician_maps, cur_map)
         
         #add to the entire data to the list 
-        data_entry = [cur_map, opporutunity_districts, avg_pop_den, democrat_maps, republician_maps]
+        data_entry = [cur_map, opporutunity_districts, round(avg_pop_den, 2), democrat_maps, republician_maps]
         map_data.append(data_entry)
         
         #move row to the next map
@@ -111,6 +129,11 @@ def create_collection_data(file_path):
         radius, angle = data_placement(map_row, opporutunity_districts_dict, avg_pop_dict, democrat_dict, republician_dict)
         map_row.append(radius)
         map_row.append(angle)
+        
+    cluster_avg_calculation(opporutunity_districts_dict, map_data)
+    cluster_avg_calculation(avg_pop_dict, map_data)
+    cluster_avg_calculation(democrat_dict, map_data)
+    cluster_avg_calculation(republician_dict, map_data)
     
     map_df = pd.DataFrame(map_data, columns=["map_id", "opportunity_districts", 
                                              "avg_population_density", "democrat_count", "republican_count", 
