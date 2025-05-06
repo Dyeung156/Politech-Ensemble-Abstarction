@@ -9,73 +9,91 @@ OPP_DISTRICTS = 1
 AVG_POP_DENSITY = 2
 DEMOCRAT_COUNT = 3
 REPUBLICAN_COUNT = 4
-RADIUS = 5
-ANGLE = 6
+X = 5
+Y = 6
 
-
-#Description: determine the angle for where the cluster will eventually go in the front end 
-#Parameters: section - the section of the map that we are looking at (1-8)
-#            is_negative - if the distance is negative or not (True or False)
-#Returns: the angle of the cluster in degrees (float)
-def get_map_angle(section: int, is_negative: bool):
-    section_start = 45 * (section - 1)
-    if is_negative:
-        section_start += 180
-        
-    return section_start + 22.5
-
-
-def map_percentile(map_data, data_dict: dict):
-    max_map = max(data_dict)
-    min_map = min(data_dict)
-    
-    resulting_distance = (map_data - min_map) / (max_map - min_map)
-
-    return resulting_distance
-    
-#Description: determine the placement of the map in the front end visual
-#Parameters: map_data_row (List) - the row of data for the map 
-#            op_dict - opportunity districts dictionary
-#            apd_dict - average population density dictionary
-#            dem_dict - democrat dictionary
-#            rep_dict - republican dictionary
-#Returns: the distance and angle of the map in the front end visual (tuple)
-def data_placement(map_data_row, op_dict, apd_dict, dem_dict, rep_dict):
-    op_percent = map_percentile(map_data_row[OPP_DISTRICTS], op_dict) 
-    pop_percent = map_percentile(int(map_data_row[AVG_POP_DENSITY] // 100000), apd_dict)
-    dem_percent = map_percentile(map_data_row[DEMOCRAT_COUNT], dem_dict)
-    rep_percent = map_percentile(map_data_row[REPUBLICAN_COUNT], rep_dict)
-    
-    # will use percentiles as weights for the angle average
-    weighted_total = op_percent + pop_percent + dem_percent + rep_percent
-    
-    op_angle = get_map_angle(OPP_DISTRICTS, op_percent < 0.5) * (op_percent / weighted_total)
-    pop_angle = get_map_angle(AVG_POP_DENSITY, pop_percent < 0.5) * (pop_percent / weighted_total)
-    dem_angle = get_map_angle(DEMOCRAT_COUNT, dem_percent < 0.5) * (dem_percent / weighted_total)
-    rep_angle = get_map_angle(REPUBLICAN_COUNT, rep_percent < 0.5) * (rep_percent / weighted_total)
-    
-    avg_percent = (op_percent + pop_percent + dem_percent + rep_percent) / 4
-    weighted_avg_angle = (op_angle + pop_angle + dem_angle + rep_angle) 
-    
-    return (round(avg_percent, 2) , round(weighted_avg_angle, 2))
-       
 def create_JSON_file(dict_input, file_name):
     #upload the dictionary to a JSON file
     with open(f"data works\Actual Data\{file_name}.json", "w") as json_file:
         json.dump(dict_input, json_file, indent=4)
 
-def cluster_avg_calculation(cluster_dict, map_data):
+def map_percentile(map_data, data_range):
+    max_map = data_range[1]
+    min_map = data_range[0]
+    
+    resulting_distance = (map_data - min_map) / (max_map - min_map)
+
+    return resulting_distance
+    
+def make_anchor_points(ranges: list[tuple[int, int]], anchor_names: list[str]):
+    results = dict()
+    length = len(anchor_names)
+    for i in range(length):
+        # get the (x, y) points for the anchor points
+        anchor_points = dict()
+        anchor_points[f"Min: {ranges[i + 1][0]}"] = util.cluster_anchor_point(i + 1, 1.0, 1.0)
+        anchor_points[f"Max: {ranges[i + 1][1]}"] = util.cluster_anchor_point(i + 1, -1.0, -1.0)
+        # add to results dictionary
+        results[anchor_names[i]] = anchor_points
+        
+    # write to json file
+    create_JSON_file(results, "anchor_points")
+
+def map_point(map_data_row, ranges):
+    op_radius = map_percentile(map_data_row[OPP_DISTRICTS], ranges[OPP_DISTRICTS])
+    avg_pop_radius = map_percentile(map_data_row[AVG_POP_DENSITY] // 100000, ranges[AVG_POP_DENSITY])
+    dem_radius = map_percentile(map_data_row[DEMOCRAT_COUNT], ranges[DEMOCRAT_COUNT])
+    rep_radius = map_percentile(map_data_row[REPUBLICAN_COUNT], ranges[REPUBLICAN_COUNT])
+    
+    total_weight = op_radius + avg_pop_radius + dem_radius + rep_radius
+    
+    op_point = util.anchor_point(OPP_DISTRICTS, op_radius, total_weight)
+    avg_pop_point = util.anchor_point(AVG_POP_DENSITY, avg_pop_radius, total_weight)
+    dem_point = util.anchor_point(DEMOCRAT_COUNT, dem_radius, total_weight)
+    rep_point = util.anchor_point(REPUBLICAN_COUNT, rep_radius, total_weight)
+    
+    
+    avg_xValue = (op_point[0] + avg_pop_point[0] + dem_point[0] + rep_point[0]) / 4
+    avg_yValue = (op_point[1] + avg_pop_point[1] + dem_point[1] + rep_point[1]) / 4 
+    
+    return (round(avg_xValue, 2) , round(avg_yValue, 2))
+
+
+def cluster_map_point(map_data_row, ranges, section: int):
+    op_radius = map_percentile(map_data_row[OPP_DISTRICTS], ranges[OPP_DISTRICTS])
+    avg_pop_radius = map_percentile(map_data_row[AVG_POP_DENSITY] // 100000, ranges[AVG_POP_DENSITY])
+    dem_radius = map_percentile(map_data_row[DEMOCRAT_COUNT], ranges[DEMOCRAT_COUNT])
+    rep_radius = map_percentile(map_data_row[REPUBLICAN_COUNT], ranges[REPUBLICAN_COUNT])
+    
+    weights = [0, op_radius, avg_pop_radius, dem_radius, rep_radius]
+    # double the weight of the section we are looking at
+    weights[section] *= 2
+    total_weight = sum(weights)
+    
+    op_point = util.cluster_anchor_point(OPP_DISTRICTS, op_radius * weights[OPP_DISTRICTS], total_weight)
+    avg_pop_point = util.cluster_anchor_point(AVG_POP_DENSITY, avg_pop_radius* weights[AVG_POP_DENSITY], total_weight)
+    dem_point = util.cluster_anchor_point(DEMOCRAT_COUNT, dem_radius* weights[DEMOCRAT_COUNT], total_weight)
+    rep_point = util.cluster_anchor_point(REPUBLICAN_COUNT, rep_radius * weights[REPUBLICAN_COUNT], total_weight)
+    
+    avg_xValue = (op_point[0] + avg_pop_point[0] + dem_point[0] + rep_point[0]) 
+    avg_yValue = (op_point[1] + avg_pop_point[1] + dem_point[1] + rep_point[1]) 
+    
+    return (round(avg_xValue, 2) , round(avg_yValue, 2))
+
+def cluster_avg_calculation(cluster_dict, map_data, ranges, section: int):
     cluster_measures = dict()
     for cluster, map_indices in cluster_dict.items():
-        radius_sum = 0
-        angle_sum = 0
+        x_sum = 0
+        y_sum = 0
         
         for map_index in map_indices:
-            radius_sum += map_data[map_index][RADIUS]
-            angle_sum += map_data[map_index][ANGLE]
+            x, y = cluster_map_point(map_data[map_index], ranges, section)
+            
+            x_sum += x
+            y_sum += y
         
-        # store the avg radius and angle for the cluster
-        cluster_measures[cluster] = (radius_sum / len(map_indices), angle_sum / len(map_indices))
+        # store the avg X and Y values for the cluster
+        cluster_measures[cluster] = (x_sum / len(map_indices), y_sum / len(map_indices))
     
     return cluster_measures
 
@@ -112,28 +130,36 @@ def create_collection_data(file_path):
         #move row to the next map
         row += num_districts
         cur_map += 1
-        
+    
+    op_range = (min(opporutunity_districts_dict), max(opporutunity_districts_dict))
+    avg_pop_range = (min(avg_pop_dict), max(avg_pop_dict))
+    dem_range = (min(democrat_dict), max(democrat_dict))
+    rep_range = (min(republician_dict), max(republician_dict))
+    # the first tuple is added bc for consisitency with the constants 
+    ranges = [(0,0), op_range, avg_pop_range, dem_range, rep_range]
+    make_anchor_points(ranges, ["Opportunity Districts", "Average Population Density", "Democrat Districts", "Republician Districts"])
+    
     for map_row in map_data:
-        radius, angle = data_placement(map_row, opporutunity_districts_dict, avg_pop_dict, democrat_dict, republician_dict)
-        map_row.append(radius)
-        map_row.append(angle)
+        xValue, yValue = map_point(map_row, ranges)
+        map_row.append(xValue)
+        map_row.append(yValue)
     
     measures_dict = dict()
-    measures_dict["Opportunity Districts"] = cluster_avg_calculation(opporutunity_districts_dict, map_data)
-    measures_dict["Average Population Density"] = cluster_avg_calculation(avg_pop_dict, map_data)
-    measures_dict["Democrat Districts"] = cluster_avg_calculation(democrat_dict, map_data)
-    measures_dict["Republician Districts"] = cluster_avg_calculation(republician_dict, map_data)
+    measures_dict["Opportunity Districts"] = cluster_avg_calculation(opporutunity_districts_dict, map_data, ranges, OPP_DISTRICTS)
+    measures_dict["Average Population Density"] = cluster_avg_calculation(avg_pop_dict, map_data, ranges, AVG_POP_DENSITY)
+    measures_dict["Democrat Districts"] = cluster_avg_calculation(democrat_dict, map_data, ranges, DEMOCRAT_COUNT)
+    measures_dict["Republician Districts"] = cluster_avg_calculation(republician_dict, map_data, ranges, REPUBLICAN_COUNT)
     
     map_df = pd.DataFrame(map_data, columns=["map_id", "opportunity_districts", 
                                              "avg_population_density", "democrat_count", "republican_count", 
-                                             "radius", "angle"])
+                                             "X Value", "Y Value"])
     map_df.to_csv("data works\Actual Data\map_data.csv", index = False)
         
     create_JSON_file(opporutunity_districts_dict, "opportunity_districts")
     create_JSON_file(avg_pop_dict, "avg_population_density")
     create_JSON_file(democrat_dict, "democrat_count")
     create_JSON_file(republician_dict, "republican_count")
-    create_JSON_file(measures_dict, "cluster_measures")
+    create_JSON_file(measures_dict, "cluster_placements")
     
     print("Data collection complete!")
     

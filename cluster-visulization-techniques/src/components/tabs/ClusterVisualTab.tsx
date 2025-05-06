@@ -1,5 +1,5 @@
 // import ColorTriangle from "../ColorTriangle";
-import CircleVisual from "@/components/circleVisual";
+import CircleVisual from "@/components/CircleVisual";
 
 export default function ClusterVisualTab() {
     return (

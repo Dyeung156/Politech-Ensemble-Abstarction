@@ -1,28 +1,29 @@
 import ClusterButton from "./ClusterButton";
-import cluster_measures from "@/assets/cluster_measures.json";
+import AnchorPoint from "./AnchorPoint";
+
+import cluster_placements from "@/assets/cluster_placements.json";
 import opp_district_data from "@/assets/opportunity_districts.json";
 import avg_pop from "@/assets/avg_population_density.json";
 import dem_count from "@/assets/democrat_count.json";
 import rep_count from "@/assets/republican_count.json"
+import anchor_points from "@/assets/anchor_points.json";
 
-function pointPlacement(measuresData: [string, number[]][], clusterValue: string, radius: number) 
+function pointPlacement(measuresData: [string, number[]][], clusterValue: string) 
 {
-  let avgRadiusPercent = 0;
-  let avgAngle = 0;
+  let x = 0;
+  let y = 0;
   for (const measure of measuresData) 
   {
     if (measure[0] != clusterValue) 
       continue;
 
-    avgRadiusPercent = (measure[1][0] * radius) / 100;
-    avgAngle = measure[1][1] * Math.PI / 180;
+    x = measure[1][0]
+    y = measure[1][1]
+    return { x, y };
 
   }
 
-  const x = Math.cos(avgAngle) * (avgRadiusPercent * radius);
-  const y = Math.sin(avgAngle) * (avgRadiusPercent * radius);
-
-  return { x: x + 150, y: y + 150 };
+  return { x, y};
 }
 
 export default function CircleVisual() 
@@ -32,58 +33,124 @@ export default function CircleVisual()
   const dem_count_clusters = Object.entries(dem_count);
   const rep_count_clusters = Object.entries(rep_count);
 
-  const oppMeasures: [string, number[]][] = Object.entries(cluster_measures["Opportunity Districts"]);
-  const avgPopMeasures: [string, number[]][] = Object.entries(cluster_measures["Average Population Density"]);
-  const demMeasures: [string, number[]][] = Object.entries(cluster_measures["Democrat Districts"]);
-  const repMeasures: [string, number[]][] = Object.entries(cluster_measures["Republician Districts"]);
+  const oppMeasures: [string, number[]][] = Object.entries(cluster_placements["Opportunity Districts"]);
+  const oppAnchors: [string, number[]][] = Object.entries(anchor_points["Opportunity Districts"]);
+
+  const avgPopMeasures: [string, number[]][] = Object.entries(cluster_placements["Average Population Density"]);
+  const avgPopAnchors : [string, number[]][] = Object.entries(anchor_points["Average Population Density"]);
+
+  const demMeasures: [string, number[]][] = Object.entries(cluster_placements["Democrat Districts"]);
+  const demAnchors : [string, number[]][] = Object.entries(anchor_points["Democrat Districts"]);
+
+  const repMeasures: [string, number[]][] = Object.entries(cluster_placements["Republician Districts"]);
+  const repAnchors : [string, number[]][] = Object.entries(anchor_points["Republician Districts"]);
 
   return (
     <div>
-        <svg width = "300" height = "300" viewBox = "0 0 300 300">
-            <circle cx="150" cy="150"  r="125"
-            fill="blue" stroke="black" strokeWidth="2" />
+        <svg width = "500" height = "500" viewBox = "-80 0 460 300">
+            <circle cx="150" cy="150"  r="175"
+            fill="#778899 " stroke="black" strokeWidth="2" />
 
+            {/** Opportunity Districts **/}
             {
               Array.from(opp_district_clusters).map((clusterPair, index) => {
                 // const measureData: ClusterMeasures = cluster_measures["Opportunity Districts"][clusterPair[0]];
                 return <ClusterButton key={index}
-                  point={pointPlacement(oppMeasures, clusterPair[0], 125)}
+                  point={pointPlacement(oppMeasures, clusterPair[0])}
                   mapData={clusterPair}
-                  className="tooltip bg-amber-100" />
+                  className="tooltip bg-amber-100"
+                  color = "#9caf88"
+                  clusterType = "Opportunity Districts" />
               })
             }
+            {/**Opp Distirct Anchors */}
+            {
+              Array.from(oppAnchors).map((clusterPair, index) => {
+                // const measureData: ClusterMeasures = cluster_measures["Opportunity Districts"][clusterPair[0]];
+                return <AnchorPoint key={index}
+                  point={pointPlacement(oppAnchors, clusterPair[0])}
+                  mapData={clusterPair}
+                  className="tooltip bg-amber-100" 
+                  clusterType = "Opportunity Districts"
+                  />
+              })
+            }
+            {/** Average Population Density **/}
 
             {
               Array.from(avg_pop_clusters).map((clusterPair, index) => {
                 // console.log(pointPlacement(measureTesting, clusterPair[0], 125))
                 // const measureData: ClusterMeasures = cluster_measures["Opportunity Districts"][clusterPair[0]];
                 return <ClusterButton key={index}
-                  point={pointPlacement(avgPopMeasures, clusterPair[0], 125)}
+                  point={pointPlacement(avgPopMeasures, clusterPair[0])}
                   mapData={clusterPair}
-                  className="tooltip bg-amber-100" />
+                  className="tooltip bg-amber-100" 
+                  color = "gold"
+                  clusterType = "Avg Population Density"/>
               })
             }
 
+            {/**Avg Pop Density Anchors */}
+            {
+              Array.from(avgPopAnchors).map((clusterPair, index) => {
+                // const measureData: ClusterMeasures = cluster_measures["Opportunity Districts"][clusterPair[0]];
+                return <AnchorPoint key={index}
+                  point={pointPlacement(avgPopAnchors, clusterPair[0])}
+                  mapData={clusterPair}
+                  className="tooltip bg-amber-100" 
+                  clusterType = "Avg Population Density"
+                  />
+              })
+            }
+
+            {/** Democrat Districts **/}
             {
               Array.from(dem_count_clusters).map((clusterPair, index) => {
                 // const measureData: ClusterMeasures = cluster_measures["Opportunity Districts"][clusterPair[0]];
                 return <ClusterButton key={index}
-                  point={pointPlacement(demMeasures, clusterPair[0], 125)}
+                  point={pointPlacement(demMeasures, clusterPair[0])}
                   mapData={clusterPair}
-                  className="tooltip bg-amber-100" />
+                  className="tooltip bg-amber-100" 
+                  color = "#87CEFA"
+                  clusterType = "Democrat Districts"/>
               })
             }
-
+            {/**Democrat Districts Anchors */}
+            {
+              Array.from(demAnchors).map((clusterPair, index) => {
+                // const measureData: ClusterMeasures = cluster_measures["Opportunity Districts"][clusterPair[0]];
+                return <AnchorPoint key={index}
+                  point={pointPlacement(demAnchors, clusterPair[0])}
+                  mapData={clusterPair}
+                  className="tooltip bg-amber-100" 
+                  clusterType = "Democrat Districts"
+                  />
+              })
+            }
+            {/** Republican Districts **/}
             {
               Array.from(rep_count_clusters).map((clusterPair, index) => {
                 // const measureData: ClusterMeasures = cluster_measures["Opportunity Districts"][clusterPair[0]];
                 return <ClusterButton key={index}
-                  point={pointPlacement(repMeasures, clusterPair[0], 125)}
+                  point={pointPlacement(repMeasures, clusterPair[0])}
                   mapData={clusterPair}
-                  className="tooltip bg-amber-100" />
+                  className="tooltip bg-amber-100" 
+                  color = "red"
+                  clusterType = "Republican Districts"/>
               })
             }
-
+            {/**Republican Distirct Anchors */}
+            {
+              Array.from(repAnchors).map((clusterPair, index) => {
+                // const measureData: ClusterMeasures = cluster_measures["Opportunity Districts"][clusterPair[0]];
+                return <AnchorPoint key={index}
+                  point={pointPlacement(repAnchors, clusterPair[0])}
+                  mapData={clusterPair}
+                  className="tooltip bg-amber-100" 
+                  clusterType = "Republican Districts"
+                  />
+              })
+            }
 
         </svg>
     </div>

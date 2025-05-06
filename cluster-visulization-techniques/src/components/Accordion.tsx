@@ -15,6 +15,8 @@ export default function Accordion({ title, children, onDelete }: AccordionProps)
         <div className="border rounded-md p-4">
             <div className="flex items-center gap-2">
                 <p className="ml-2 flex-1 font-bold">{title}</p>
+                
+                {/* the + button */}
                 <button
                     onClick={toggleAccordion}
                     className="flex items-center text-blue-500 focus:outline-none"
@@ -43,6 +45,7 @@ export default function Accordion({ title, children, onDelete }: AccordionProps)
                         />
                     </svg>
                 </button>
+                {/* the x button */}
                 <button
                     onClick={onDelete}
                     className="ml-4 text-red-500 hover:text-red-700 focus:outline-none"

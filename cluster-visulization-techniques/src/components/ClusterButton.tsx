@@ -1,6 +1,6 @@
 import { useState } from "react";
-import {useDispatch, useSelector } from "react-redux"
-import { RootState } from "@/redux/index";
+import {useDispatch } from "react-redux"
+// import { RootState } from "@/redux/index";
 import {addCluster} from "@/redux/clusterSlice"
 
 interface ClusterButtonProps {
@@ -10,19 +10,22 @@ interface ClusterButtonProps {
   }
   mapData: [string, number[]]
   className?: string
+  color?: string
+  clusterType: string
 }
 
 /** 
  * Generate buttons based on RGB points
  */
-export default function ClusterButton({ point, mapData, className }: ClusterButtonProps) {
+export default function ClusterButton({ point, mapData, className, color, clusterType }: ClusterButtonProps) {
   const [showTuple, setShowTuple] = useState(false);
   const { x, y } = point;
   const dispatch = useDispatch();
   // const clusterList = useSelector((state: RootState) => state.clusters.clusters)
 
   const buttonClick = () => {
-    dispatch(addCluster(mapData))
+    const [mapTuple, mapIndices] = mapData;
+    dispatch(addCluster([clusterType, mapTuple, mapIndices]));
   }
 
   return (
@@ -30,10 +33,10 @@ export default function ClusterButton({ point, mapData, className }: ClusterButt
       {/* Button circle */}
       <circle
         cx={x}
-        cy={y}
+        cy={300 - y}
         r={5}
-        fill="rgb(100,100,100)"
-        stroke="#fff"
+        fill={color ? color: "rgb(100,100,100)"}
+        stroke="#000"
         strokeWidth="1.5"
         style={{
           cursor: 'pointer',
@@ -48,7 +51,7 @@ export default function ClusterButton({ point, mapData, className }: ClusterButt
       {/* Label text */}
       {showTuple && <text
         x={x + 10}
-        y={y - 10}
+        y={300 - y - 10}
         textAnchor="middle"
         dominantBaseline="central"
         fill="#000"
