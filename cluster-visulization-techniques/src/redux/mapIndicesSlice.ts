@@ -13,10 +13,22 @@ export const mapIndicesSlice = createSlice({
     initialState,
     reducers: {
         addMapIndex: (state, action : PayloadAction<number>) => {
-            const newMapIndex = action.payload
+            const newMapIndex = action.payload;
             //add the new map index if it is not in the state already 
             if (!state.mapIndices.includes(newMapIndex))
-                state.mapIndices.push(newMapIndex)
+                state.mapIndices.push(newMapIndex);
+        },
+        addMapIndices: (state, action: PayloadAction<number[]>) => 
+        {
+            const newIndices: number[] = action.payload;
+
+            for (const index of newIndices)
+            {
+                //add the new map index if it is not in the state already 
+                if (!state.mapIndices.includes(index))
+                    state.mapIndices.push(index);
+            }
+
         },
         deleteMapIndex: (state, action: PayloadAction<number>) => {
             const mapIndex = action.payload
@@ -27,5 +39,5 @@ export const mapIndicesSlice = createSlice({
     }
 }) 
 
-export const {addMapIndex, deleteMapIndex } = mapIndicesSlice.actions
+export const {addMapIndex, addMapIndices, deleteMapIndex } = mapIndicesSlice.actions
 export default mapIndicesSlice.reducer

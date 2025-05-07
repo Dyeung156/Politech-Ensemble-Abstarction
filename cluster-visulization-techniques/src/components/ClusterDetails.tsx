@@ -1,5 +1,5 @@
 import { deleteCluster } from "@/redux/clusterSlice"
-import { addMapIndex } from "@/redux/mapIndicesSlice";
+import { addMapIndex, addMapIndices } from "@/redux/mapIndicesSlice";
 import { useDispatch } from "react-redux";
 
 import Accordion from "@/components/Accordion";
@@ -21,11 +21,10 @@ export default function ClusterDetails({ clusterType, mapTuple, mapIndices }: Ac
             <ValueTable clusterType = {clusterType} mapValue = {mapTuple}/>
 
             {/* Open District Plan Info */}
-            <div className="text-gray-500">Map Indices:
-                {mapIndices.map((mapValue, index) => 
-                <button className="border border-gray-300 rounded px-2 py-1 hover:border-gray-500" 
-                key={index} onClick={() => dispatch(addMapIndex(mapValue))}>{mapValue}</button>)}
-            </div>
+            <button className="text-gray-500 border border-gray-300 rounded px-2 py-1 hover:border-gray-500"
+            onClick = {() => dispatch(addMapIndices(mapIndices))} >
+                Look at District Plan Information
+            </button>
         </Accordion>
     )
 }
