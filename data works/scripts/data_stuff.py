@@ -31,8 +31,8 @@ def make_anchor_points(ranges: list[tuple[int, int]], anchor_names: list[str]):
     for i in range(length):
         # get the (x, y) points for the anchor points
         anchor_points = dict()
-        anchor_points[f"Min: {ranges[i + 1][0]}"] = util.cluster_anchor_point(i + 1, 1.0, 1.0)
-        anchor_points[f"Max: {ranges[i + 1][1]}"] = util.cluster_anchor_point(i + 1, -1.0, -1.0)
+        anchor_points[f"Min: {ranges[i + 1][0]}"] = util.cluster_anchor_point(i + 1, -1.0, -1.0)
+        anchor_points[f"Max: {ranges[i + 1][1]}"] = util.cluster_anchor_point(i + 1, 1.0, 1.0)
         # add to results dictionary
         results[anchor_names[i]] = anchor_points
         

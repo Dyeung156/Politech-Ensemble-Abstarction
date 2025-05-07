@@ -46,6 +46,7 @@ export const clusterSlice = createSlice({
                 if (hasMapIndices(state.clusters.map(([strType, mapTuple, indices]) => indices), incomingMapIndices))
                     return;
             }
+            state.clusters = [];
             state.clusters.push(incomingCluster);
         },
         deleteCluster: (state, action: PayloadAction<[string, string, number[]]>) => {

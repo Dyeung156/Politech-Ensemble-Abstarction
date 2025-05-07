@@ -19,7 +19,7 @@ def update_range(section: int, incoming_value: int, ranges: list[ list[int] ]) -
 
 def cluster_summary(index_list: list[int], df: pd.DataFrame):
     # extra [0,0] and 0.0 at the start is to remain consistent with the other script
-    value_ranges: list[ list[int] ] = [[0,0], [0,0], [0,0], [0,0], [0,0]]
+    value_ranges: list[ list[int] ] = [[0,0], [100,0], [100,0], [100,0], [100,0]]
     avg_values: list[float] = [0.0, 0.0, 0.0, 0.0, 0.0]
     for index in index_list:
         # update range values
@@ -38,6 +38,7 @@ def cluster_summary(index_list: list[int], df: pd.DataFrame):
     divisor = len(index_list)
     for index in range(len(avg_values)):
         avg_values[index] /= divisor
+        avg_values[index] = round(avg_values[index], 2)
             
     return (value_ranges[1::], avg_values[1::])
 
@@ -75,8 +76,8 @@ if __name__ == "__main__":
     avg_dict["Democrat Districts"] = avg_values
     
     range_values, avg_values = summary_calculation(f"{PREFIX}\\republican_count.json", df)
-    range_dict["Republician Districts"] = range_values
-    avg_dict["Republician Districts"] = avg_values
+    range_dict["Republican Districts"] = range_values
+    avg_dict["Republican Districts"] = avg_values
     
     with open("data works\Actual Data\cluster_ranges.json", "w") as file:
         json.dump(range_dict, file, indent = 4)

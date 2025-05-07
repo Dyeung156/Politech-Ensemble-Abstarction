@@ -1,7 +1,9 @@
 import { deleteCluster } from "@/redux/clusterSlice"
 import { addMapIndex } from "@/redux/mapIndicesSlice";
 import { useDispatch } from "react-redux";
-import Accordion from "./Accordion";
+
+import Accordion from "@/components/Accordion";
+import ValueTable from "@/components/ValueTable";
 
 interface AccordionValues {
     clusterType: string
@@ -15,10 +17,10 @@ export default function ClusterDetails({ clusterType, mapTuple, mapIndices }: Ac
     const detailTitle = `${clusterType}: ${mapTuple}`
     return (
         <Accordion title = {detailTitle} onDelete={deleteButton} >
-            <div>
-                
-            </div>
+            {/* Table showing cluster values */}
+            <ValueTable clusterType = {clusterType} mapValue = {mapTuple}/>
 
+            {/* Open District Plan Info */}
             <div className="text-gray-500">Map Indices:
                 {mapIndices.map((mapValue, index) => 
                 <button className="border border-gray-300 rounded px-2 py-1 hover:border-gray-500" 

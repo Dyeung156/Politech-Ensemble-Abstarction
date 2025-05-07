@@ -86,7 +86,7 @@ export default function CircleVisual()
                   mapData={clusterPair}
                   className="tooltip bg-amber-100" 
                   color = "gold"
-                  clusterType = "Avg Population Density"/>
+                  clusterType = "Average Population Density"/>
               })
             }
 
@@ -98,7 +98,7 @@ export default function CircleVisual()
                   point={pointPlacement(avgPopAnchors, clusterPair[0])}
                   mapData={clusterPair}
                   className="tooltip bg-amber-100" 
-                  clusterType = "Avg Population Density"
+                  clusterType = "Average Population Density"
                   />
               })
             }
