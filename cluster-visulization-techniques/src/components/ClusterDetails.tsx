@@ -1,5 +1,5 @@
 import { deleteCluster } from "@/redux/clusterSlice"
-import { addMapIndex, addMapIndices } from "@/redux/mapIndicesSlice";
+import { addMapIndices } from "@/redux/mapIndicesSlice";
 import { useDispatch } from "react-redux";
 
 import Accordion from "@/components/Accordion";

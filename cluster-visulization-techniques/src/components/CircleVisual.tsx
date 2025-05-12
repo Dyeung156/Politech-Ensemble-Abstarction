@@ -47,7 +47,7 @@ export default function CircleVisual()
 
   return (
     <div>
-        <svg width = "500" height = "500" viewBox = "-80 0 460 300">
+        <svg width = "500" height = "500" viewBox = "-80 0 460 405">
             <circle cx="150" cy="150"  r="175"
             fill="#778899 " stroke="black" strokeWidth="2" />
 
@@ -152,6 +152,19 @@ export default function CircleVisual()
               })
             }
 
+            {/** Legend */}
+            <g transform="translate(25, 370)" >
+              <rect x="-15" y="-10" width="300" height="75" fill="none" stroke="gray" strokeWidth="2" />
+              <text x="0" y="5" fontSize="15" fill="black">Legend</text>
+              <circle cx="0" cy="20" r="10" fill="#9caf88" />
+              <text x="15" y="25" fontSize="10" fill="black">Opportunity Districts</text>
+              <circle cx="135" cy="20" r="10" fill="gold" />
+              <text x="150" y="25" fontSize="10" fill="black">Average Population Density</text>
+              <circle cx="0" cy="50" r="10" fill="#87CEFA"/>
+              <text x="15" y="50" fontSize="10" fill="black">Democrat Districts</text>
+              <circle cx="135" cy="50" r="10" fill="#FF6347"/>
+              <text x="150" y="50" fontSize="10" fill="black">Republican Districts</text>
+            </g>
         </svg>
     </div>
   );
