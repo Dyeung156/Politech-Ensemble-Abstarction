@@ -54,7 +54,7 @@ export default function AnchorPoint({ point, mapData, className, clusterType }: 
         fontWeight="bold"
         pointerEvents="none"
       >
-        <tspan x={textX} dy="0" textAnchor="middle"> {clusterType} </tspan>
+        <tspan x = {textX} dy="0" textAnchor="middle"> {clusterType} </tspan>
         <tspan x = {textX} dy = "10" textAnchor="middle"> {mapData[0]} </tspan>
       </text>
 

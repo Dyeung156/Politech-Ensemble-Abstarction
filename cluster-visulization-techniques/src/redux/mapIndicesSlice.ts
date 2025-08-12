@@ -20,14 +20,19 @@ export const mapIndicesSlice = createSlice({
         },
         addMapIndices: (state, action: PayloadAction<number[]>) => 
         {
-            const newIndices: number[] = action.payload;
 
-            for (const index of newIndices)
-            {
-                //add the new map index if it is not in the state already 
-                if (!state.mapIndices.includes(index))
-                    state.mapIndices.push(index);
-            }
+            const newIndices: number[] = action.payload;
+            state.mapIndices = newIndices;
+            /*would add the new map indices on top of old ones but not
+            used at the moment */
+
+            // for (const index of newIndices)
+            // {
+            //     //add the new map index if it is not in the state already 
+            //     if (!state.mapIndices.includes(index))
+            //         state.mapIndices.push(index);
+
+            // }
 
         },
         deleteMapIndex: (state, action: PayloadAction<number>) => {
