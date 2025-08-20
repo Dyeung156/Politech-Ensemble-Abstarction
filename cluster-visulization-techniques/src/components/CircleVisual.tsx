@@ -8,6 +8,9 @@ import dem_count from "@/assets/democrat_count.json";
 import rep_count from "@/assets/republican_count.json"
 import anchor_points from "@/assets/anchor_points.json";
 
+import {useEffect, useRef} from "react";
+import * as d3 from "d3";
+
 function pointPlacement(measuresData: [string, number[]][], clusterValue: string) 
 {
   let x = 0;
@@ -44,6 +47,77 @@ export default function CircleVisual()
 
   const repMeasures: [string, number[]][] = Object.entries(cluster_placements["Republician Districts"]);
   const repAnchors : [string, number[]][] = Object.entries(anchor_points["Republician Districts"]);
+
+  const myRef = useRef<SVGGElement>(null);
+  useEffect(() => 
+  {
+    const legend = d3.select(myRef.current)
+    
+    // outer rectangle 
+    legend.append("rect")
+      .attr("x", -15)
+      .attr("y", 360)
+      .attr("width", 300)
+      .attr("height", 75)
+      .attr("fill", "none")
+      .attr("stroke", "gray")
+      .attr("stroke-width", 2);
+    // Legend text
+    legend.append("text")
+      .attr("x", 0)
+      .attr("y", 375)
+      .attr("font-size", 15)
+      .attr("fill", "black")
+      .text("Legend");
+    // Opportunity Districts
+    legend.append("circle")
+      .attr("cx", 0)
+      .attr("cy", 390)
+      .attr("r", 10)
+      .attr("fill", "#9caf88");
+    legend.append("text")
+      .attr("x", 15)
+      .attr("y", 395)
+      .attr("font-size", 10)
+      .attr("fill", "black")
+      .text("Opportunity Districts");
+    // Average Population Density
+    legend.append("circle")
+      .attr("cx", 135)
+      .attr("cy", 390)
+      .attr("r", 10)
+      .attr("fill", "gold");
+    legend.append("text")
+      .attr("x", 150)
+      .attr("y", 395)
+      .attr("font-size", 10)
+      .attr("fill", "black")
+      .text("Average Population Density");
+    // Democrat Districts
+    legend.append("circle")
+      .attr("cx", 0)
+      .attr("cy", 420)
+      .attr("r", 10)
+      .attr("fill", "#87CEFA");
+    legend.append("text")
+      .attr("x", 15)
+      .attr("y", 425)
+      .attr("font-size", 10)
+      .attr("fill", "black")
+      .text("Democrat Districts");
+    // Republican Districts
+    legend.append("circle")
+      .attr("cx", 135)
+      .attr("cy", 420)
+      .attr("r", 10)
+      .attr("fill", "#FF6347");
+    legend.append("text")
+      .attr("x", 150)
+      .attr("y", 425)
+      .attr("font-size", 10)
+      .attr("fill", "black")
+      .text("Republican Districts");
+  },[]);
 
   return (
     <div>
@@ -153,8 +227,8 @@ export default function CircleVisual()
             }
 
             {/** Legend */}
-            <g transform="translate(25, 370)" >
-              <rect x="-15" y="-10" width="300" height="75" fill="none" stroke="gray" strokeWidth="2" />
+            <g ref = {myRef} transform="translate(25, 0)" >
+              {/* <rect x="-15" y="-10" width="300" height="75" fill="none" stroke="gray" strokeWidth="2" />
               <text x="0" y="5" fontSize="15" fill="black">Legend</text>
               <circle cx="0" cy="20" r="10" fill="#9caf88" />
               <text x="15" y="25" fontSize="10" fill="black">Opportunity Districts</text>
@@ -163,7 +237,7 @@ export default function CircleVisual()
               <circle cx="0" cy="50" r="10" fill="#87CEFA"/>
               <text x="15" y="50" fontSize="10" fill="black">Democrat Districts</text>
               <circle cx="135" cy="50" r="10" fill="#FF6347"/>
-              <text x="150" y="50" fontSize="10" fill="black">Republican Districts</text>
+              <text x="150" y="50" fontSize="10" fill="black">Republican Districts</text> */}
             </g>
         </svg>
     </div>

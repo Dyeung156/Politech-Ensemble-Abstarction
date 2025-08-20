@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {useDispatch } from "react-redux"
 // import { RootState } from "@/redux/index";
 import {addCluster} from "@/redux/clusterSlice"
+import * as d3 from "d3";
 
 interface ClusterButtonProps {
   point: {
@@ -21,17 +22,51 @@ export default function ClusterButton({ point, mapData, className, color, cluste
   const [showTuple, setShowTuple] = useState(false);
   const { x, y } = point;
   const dispatch = useDispatch();
-  // const clusterList = useSelector((state: RootState) => state.clusters.clusters)
+  
+  const myRef = useRef<SVGGElement>(null);
 
   const buttonClick = () => {
     const [mapTuple, mapIndices] = mapData;
     dispatch(addCluster([clusterType, mapTuple, mapIndices]));
   }
 
+  useEffect(() => 
+  {
+    const group = d3.select(myRef.current);
+    group.selectAll("*").remove(); // Clear previous elements
+    // circle element
+    group.append("circle")
+        .attr("cx", x)
+        .attr("cy", 300 - y)
+        .attr("r", 5)
+        .attr("fill", color ? color : "rgb(100,100,100)")
+        .attr("stroke", "#000")
+        .attr("stroke-width", "1.5")
+        .style("cursor", "pointer")
+        .on("click", buttonClick)
+        .on("mouseenter", () => setShowTuple(true))
+        .on("mouseleave", () => setShowTuple(false));
+    // show cluster value text only if showTuple is true
+    if (showTuple) 
+    {
+      group.append("text")
+        .attr("x", x + 10)
+        .attr("y", 300 - y - 10)
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "central")
+        .attr("fill", "#000")
+        .attr("font-size", "10")
+        .attr("font-weight", "bold")
+        .attr("pointer-events", "none")
+        .text(mapData[0]);
+    }
+
+  },[x, y, color, mapData, clusterType, showTuple, dispatch]);
+
   return (
-    <g className={className}>
+    <g ref = {myRef} className={className}>
       {/* Button circle */}
-      <circle
+      {/* <circle
         cx={x}
         cy={300 - y}
         r={5}
@@ -46,10 +81,10 @@ export default function ClusterButton({ point, mapData, className, color, cluste
 
         onMouseEnter={() => setShowTuple(true)}
         onMouseLeave={() => setShowTuple(false)}
-      />
+      /> */}
 
       {/* Label text */}
-      {showTuple && <text
+      {/* {showTuple && <text
         x={x + 10}
         y={300 - y - 10}
         textAnchor="middle"
@@ -60,9 +95,7 @@ export default function ClusterButton({ point, mapData, className, color, cluste
         pointerEvents="none"
       >
         {mapData[0]}
-      </text>}
-
-
+      </text>} */}
     </g>
   );
 }
