@@ -28,7 +28,7 @@ export default function TabCollection() {
             <PanelResizeHandle className = "outline-black w-1"/>
 
             {maps.length > 0 ? <Panel className="bg-gray-300 w-3/4 p-4 overflow-y-auto">
-                <h2 className="text-lg font-semibold mb-4 text-center">Map Indices</h2>
+                <h2 className="text-lg font-semibold mb-4 text-center">District Map Details</h2>
                 <MapDetailsTab/>
             </Panel> : null}
         </PanelGroup>
