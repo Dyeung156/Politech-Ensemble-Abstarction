@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import {useDispatch } from "react-redux"
 // import { RootState } from "@/redux/index";
-import {addCluster} from "@/redux/clusterSlice"
+import {addCluster, deleteCluster} from "@/redux/clusterSlice"
+import { addMapIndices } from "@/redux/mapIndicesSlice";
 import * as d3 from "d3";
 
 interface ClusterButtonProps {
@@ -21,15 +22,16 @@ interface ClusterButtonProps {
 export default function ClusterButton({ point, mapData, className, color, clusterType }: ClusterButtonProps) {
   const [showTuple, setShowTuple] = useState(false);
   const { x, y } = point;
+
   const dispatch = useDispatch();
   
+  const [mapTuple, mapIndices] = mapData;
+  const addClusterView = () => dispatch(addCluster([clusterType, mapTuple, mapIndices]));
+  const removeClusterView = () => dispatch(deleteCluster([clusterType, mapTuple, mapIndices]));
+  const buttonClick = () => dispatch(dispatch(addMapIndices(mapIndices)));
+      
+
   const myRef = useRef<SVGGElement>(null);
-
-  const buttonClick = () => {
-    const [mapTuple, mapIndices] = mapData;
-    dispatch(addCluster([clusterType, mapTuple, mapIndices]));
-  }
-
   useEffect(() => 
   {
     const group = d3.select(myRef.current);
@@ -44,8 +46,8 @@ export default function ClusterButton({ point, mapData, className, color, cluste
         .attr("stroke-width", "1.5")
         .style("cursor", "pointer")
         .on("click", buttonClick)
-        .on("mouseenter", () => setShowTuple(true))
-        .on("mouseleave", () => setShowTuple(false));
+        .on("mouseenter", () => {setShowTuple(true); addClusterView();})
+        .on("mouseleave", () => {setShowTuple(false); removeClusterView();});
     // show cluster value text only if showTuple is true
     if (showTuple) 
     {

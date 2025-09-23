@@ -7,9 +7,9 @@ export interface AccordionProps {
 }
 
 export default function Accordion({ title, children, onDelete }: AccordionProps) {
-    const [isOpen, setIsOpen] = useState(false);
+    
 
-    const toggleAccordion = () => setIsOpen((prev) => !prev);
+    
 
     return (
         <div className="border rounded-md p-4">
@@ -18,7 +18,6 @@ export default function Accordion({ title, children, onDelete }: AccordionProps)
                 
                 {/* the + button */}
                 <button
-                    onClick={toggleAccordion}
                     className="flex items-center text-blue-500 focus:outline-none"
                 >
                     <svg
@@ -32,16 +31,16 @@ export default function Accordion({ title, children, onDelete }: AccordionProps)
                             width="16"
                             height="2"
                             rx="1"
-                            className={`transform origin-center transition duration-200 ease-out ${isOpen && "!rotate-180"
-                                }`}
+                            className={`transform origin-center transition duration-200 ease-out "!rotate-180"
+                                `}
                         />
                         <rect
                             y="7"
                             width="16"
                             height="2"
                             rx="1"
-                            className={`transform origin-center rotate-90 transition duration-200 ease-out ${isOpen && "!rotate-180"
-                                }`}
+                            className={`transform origin-center rotate-90 transition duration-200 ease-out  "!rotate-180"
+                                `}
                         />
                     </svg>
                 </button>
@@ -53,7 +52,7 @@ export default function Accordion({ title, children, onDelete }: AccordionProps)
                     X
                 </button>
             </div>
-            {isOpen && <div className="mt-4">{children}</div>}
+            <div className="mt-4">{children}</div>
         </div>
     );
 }
