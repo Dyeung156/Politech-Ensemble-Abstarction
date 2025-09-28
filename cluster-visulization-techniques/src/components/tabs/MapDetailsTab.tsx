@@ -60,7 +60,7 @@ export default function MapDetailsTab()
                         .text(d => d);
             // table body
             const tableBody = tableElement.append("tbody");
-
+            
             outputData.forEach((output, index) => 
             {
                 // data row
@@ -77,21 +77,22 @@ export default function MapDetailsTab()
                         .enter()
                         .append("td")
                         .attr("class", "px-4 py-2 border")
-                        .text(d => d || "N/A"); 
+                        .text(d => d ?? "N/A"); 
             })
     }, [selectedMaps])
 
 
     return(
         <div>
+            
             <div ref = {myRef}>
             {/* {selectedMaps.map((mapValue, index) =>  
             <MapDetails key = {index} mapIndex = {mapValue}/>)} */}
             </div>
 
-            <div>
-                <h2 className="text-center text-lg font-semibold mt-4 mb-2">{detailTitle}</h2>
-            </div>
+            
+            <h2 className="text-center text-lg font-semibold mt-4 mb-2">{detailTitle}</h2>
+            
         </div>
         
     )
