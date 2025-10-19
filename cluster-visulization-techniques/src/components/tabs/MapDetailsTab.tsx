@@ -95,7 +95,12 @@ export default function MapDetailsTab()
             buttonContainer.append("button")
                 .attr("class", "px-3 py-1 border rounded")
                 .text("<-")
-                .on("click", () => setDisplayRow(row => Math.max(0, row - rowsPerPage)));
+                .on("click", () => 
+                {
+                    let newRowValue: number = Math.max(0, displayRow - rowsPerPage);
+                    newRowValue = Math.floor(newRowValue / 10) * 10;
+                    setDisplayRow(newRowValue);
+                });
             
             buttonContainer.append("span")
                 .attr("class", "mx-2 text-sm text-gray-600")
@@ -108,7 +113,12 @@ export default function MapDetailsTab()
             buttonContainer.append("button")
                 .attr("class", "px-3 py-1 border rounded")
                 .text("->")
-                .on("click", () => setDisplayRow(row => Math.min(allMapData.length, row + rowsPerPage)));
+                .on("click", () => 
+                {
+                    let newRowValue: number = Math.min(allMapData.length, displayRow + rowsPerPage);
+                    newRowValue = Math.floor(newRowValue / 10) * 10;
+                    setDisplayRow(newRowValue);
+                });
             
 
     }, [allMapData, displayRow])

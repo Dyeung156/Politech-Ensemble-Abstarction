@@ -7,7 +7,6 @@ import MapDetailsTab from "./MapDetailsTab";
 
 import {useDispatch } from "react-redux"
 import {wipeCluster, lockOff} from "@/redux/clusterSlice"
-import {wipeMapIndices} from "@/redux/mapIndicesSlice";
 
 export default function TabCollection() {
     const lock: boolean = useSelector((state: RootState) => state.clusters.isLocked);
@@ -15,7 +14,6 @@ export default function TabCollection() {
     const dispatch = useDispatch();
     const deleteButton = () =>
     {
-        dispatch(wipeMapIndices());
         dispatch(lockOff());
         dispatch(wipeCluster());
     }
