@@ -1,12 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
 
-export interface selectedClusters{
-    clusters: [string, string, number[]][],
+export interface cluster
+{
+    anchorType: string,
+    anchorValue: string, 
+    mapIndices: number[]
+}
+
+export interface selectedCluster
+{
+    cluster: cluster | null,
     isLocked: boolean
 }
-const initialState: selectedClusters = {
-    clusters: [],
+
+const initialState: selectedCluster = 
+{
+    cluster: null,
     isLocked: false,
 }
 
@@ -14,25 +24,25 @@ export const clusterSlice = createSlice({
     name: "clusters",
     initialState,
     reducers: {
-        addCluster: (state, action: PayloadAction<[string, string, number[]]>) => {
+        addCluster: (state, action: PayloadAction<cluster>) => {
             if (state.isLocked) 
                 return;
-
-            const incomingCluster = action.payload;
-            state.clusters = [];  
-            state.clusters.push(incomingCluster);
+            state.cluster = action.payload;
         },
         wipeCluster: (state) => {
             if (state.isLocked) 
                 return;
-            state.clusters = [];   
+            state.cluster = null;   
         },
-        toggleLock: (state) => {
-            state.isLocked = !state.isLocked;
+        lockOn: (state) => {
+            state.isLocked = true;
+        },
+        lockOff: (state) => {
+            state.isLocked = false;
         }
     }
 })
 
-export const { addCluster, wipeCluster, toggleLock} = clusterSlice.actions
+export const { addCluster, wipeCluster, lockOn, lockOff} = clusterSlice.actions
 export default clusterSlice.reducer
 

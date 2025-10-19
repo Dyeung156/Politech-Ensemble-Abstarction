@@ -1,17 +1,21 @@
 import {useSelector } from "react-redux"
 import { RootState } from "@/redux/index";
+import { cluster } from "@/redux/clusterSlice";
 import ClusterDetails from "@/components/ClusterDetails"
 
 export default function ClusterDetailsTab()
 {
-    const selectedClusters: [string, string, number[]][] = useSelector((state: RootState) => state.clusters.clusters)
+    const selectedCluster: cluster | null = useSelector((state: RootState) => state.clusters.cluster);
+
+    if (!selectedCluster)
+    {
+        return <div></div>;
+    }
+
     return(
         <div>
-            {selectedClusters.map(([incomingType, clusterValue, mapIndices], index) =>  
-            <ClusterDetails key = {index} 
-                            clusterType = {incomingType} 
-                            mapTuple = {clusterValue} 
-                            mapIndices = {mapIndices}/>)}
+            <ClusterDetails clusterType = {selectedCluster.anchorType} 
+                            mapTuple = {selectedCluster.anchorValue} />
         </div>
-    )
+    );
 }

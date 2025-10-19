@@ -1,11 +1,12 @@
 import ValueTable from "@/components/ValueTable";
 
-interface AccordionValues {
+interface AccordionValues 
+{
     clusterType: string
     mapTuple: string
-    mapIndices: number[]
 }
-export default function ClusterDetails({ clusterType, mapTuple, mapIndices }: AccordionValues) {
+
+export default function ClusterDetails({ clusterType, mapTuple }: AccordionValues) {
     const detailTitle = `${clusterType}: ${mapTuple}`
 
     return (

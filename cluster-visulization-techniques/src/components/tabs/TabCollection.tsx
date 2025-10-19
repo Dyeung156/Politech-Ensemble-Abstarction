@@ -6,18 +6,17 @@ import { RootState } from "@/redux/index";
 import MapDetailsTab from "./MapDetailsTab";
 
 import {useDispatch } from "react-redux"
-import {wipeCluster, toggleLock} from "@/redux/clusterSlice"
+import {wipeCluster, lockOff} from "@/redux/clusterSlice"
 import {wipeMapIndices} from "@/redux/mapIndicesSlice";
 
 export default function TabCollection() {
-    // const clusters = useSelector((state: RootState) => state.clusters.clusters);
-    const maps = useSelector((state: RootState) => state.mapIndices.mapIndices);
+    const lock: boolean = useSelector((state: RootState) => state.clusters.isLocked);
 
     const dispatch = useDispatch();
     const deleteButton = () =>
     {
         dispatch(wipeMapIndices());
-        dispatch(toggleLock());
+        dispatch(lockOff());
         dispatch(wipeCluster());
     }
 
@@ -33,7 +32,7 @@ export default function TabCollection() {
             <PanelResizeHandle className = "outline-black w-1"/>
 
             <Panel className="bg-gray-300 w-3/4 p-4 overflow-y-auto">
-                {maps.length == 0 ?
+                {!lock ?
                     (<>
                         <h2 className="text-lg font-semibold mb-4 text-center">Cluster Details</h2>
                         <ClusterDetailsTab/> 

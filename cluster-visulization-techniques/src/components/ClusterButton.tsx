@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import {useDispatch } from "react-redux"
 // import { RootState } from "@/redux/index";
-import {addCluster, wipeCluster, toggleLock} from "@/redux/clusterSlice"
-import { addMapIndices } from "@/redux/mapIndicesSlice";
+import {cluster, addCluster, wipeCluster, lockOn} from "@/redux/clusterSlice"
 import * as d3 from "d3";
 
 interface ClusterButtonProps {
@@ -26,13 +25,15 @@ export default function ClusterButton({ point, mapData, className, color, cluste
   const dispatch = useDispatch();
   
   const [mapTuple, mapIndices] = mapData;
-  const addClusterView = () => dispatch(addCluster([clusterType, mapTuple, mapIndices]));
+  const newCluster: cluster = 
+  {
+    anchorType: clusterType,
+    anchorValue: mapTuple,
+    mapIndices: mapIndices
+  };
+  const addClusterView = () => dispatch(addCluster(newCluster));
   const removeClusterView = () => dispatch(wipeCluster());
-  const buttonClick = () => 
-    {
-      dispatch(addMapIndices(mapIndices));
-      dispatch(toggleLock());
-    };
+  const buttonClick = () => dispatch(lockOn());
       
 
   const myRef = useRef<SVGGElement>(null);

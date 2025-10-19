@@ -121,7 +121,7 @@ export default function CircleVisual()
 
   return (
     <div>
-        <svg width = "500" height = "500" viewBox = "-80 0 460 405">
+        <svg width = "500" height = "500" viewBox = "-80 0 460 410">
             <circle cx="150" cy="150"  r="175"
             fill="#778899 " stroke="black" strokeWidth="2" />
 
