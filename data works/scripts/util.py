@@ -30,11 +30,11 @@ def add_to_dict(dictionary, key, value):
 #            is_negative - if the distance is negative or not (True or False)
 #Returns: the angle of the cluster in degrees (float)
 def get_map_angle(section: int, is_negative: bool):
-    section_start = 45 * (section - 1)
+    section_start = 60 * section
     if is_negative:
         section_start += 180
         
-    return section_start + 22.5
+    return section_start + 30
 
 CENTER = (150, 150)
 RADIUS = 175

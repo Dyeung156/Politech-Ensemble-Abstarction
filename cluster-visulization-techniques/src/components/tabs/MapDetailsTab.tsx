@@ -9,7 +9,6 @@ import * as d3 from "d3";
 interface RowData {
     map_id: string;
     opportunity_districts: string;
-    avg_population_density: string;
     democrat_count: string;
     republican_count: string;
     radius: string;
@@ -63,7 +62,7 @@ export default function MapDetailsTab()
                 const headerRow = tableHeader.append("tr");
                     // header cells
                     headerRow.selectAll("th")
-                        .data(["Plan Number", "Opportunity Districts", "Average Population Density (in 100,000s)", "Democrat Districts", "Republican Districts"])
+                        .data(["Plan Number", "Opportunity Districts", "Democrat Districts", "Republican Districts"])
                         .enter()
                         .append("th")
                         .attr("class", "px-4 py-2 border")
@@ -80,7 +79,6 @@ export default function MapDetailsTab()
                         .data([
                             dataRow?.map_id ?? i,
                             dataRow?.opportunity_districts,
-                            dataRow?.avg_population_density.slice(0, 2),
                             dataRow?.democrat_count,
                             dataRow?.republican_count
                         ])

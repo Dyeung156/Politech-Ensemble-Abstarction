@@ -31,7 +31,7 @@ export default function ValueTable({ clusterType, mapValue }: ValueTableProps)
     // get the values for the cluster type and map tuple
     const ranges = all_ranges[clusterType][mapValue];
     const avg = all_avg[clusterType][mapValue];
-    const category_names = ["Opportunity Districts", "Average Population Density (100,000)", "Democratic Districts", "Republican Districts"]
+    const category_names = ["Opportunity Districts", "Democratic Districts", "Republican Districts"]
 
     const myRef = useRef<HTMLDivElement>(null);
     useEffect(() =>

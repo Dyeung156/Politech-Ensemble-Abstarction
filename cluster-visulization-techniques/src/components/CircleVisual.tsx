@@ -3,7 +3,6 @@ import AnchorPoint from "./AnchorPoint";
 
 import cluster_placements from "@/assets/cluster_placements.json";
 import opp_district_data from "@/assets/opportunity_districts.json";
-import avg_pop from "@/assets/avg_population_density.json";
 import dem_count from "@/assets/democrat_count.json";
 import rep_count from "@/assets/republican_count.json"
 import anchor_points from "@/assets/anchor_points.json";
@@ -32,15 +31,11 @@ function pointPlacement(measuresData: [string, number[]][], clusterValue: string
 export default function CircleVisual() 
 {
   const opp_district_clusters = Object.entries(opp_district_data);
-  const avg_pop_clusters = Object.entries(avg_pop);
   const dem_count_clusters = Object.entries(dem_count);
   const rep_count_clusters = Object.entries(rep_count);
 
   const oppMeasures: [string, number[]][] = Object.entries(cluster_placements["Opportunity Districts"]);
   const oppAnchors: [string, number[]][] = Object.entries(anchor_points["Opportunity Districts"]);
-
-  const avgPopMeasures: [string, number[]][] = Object.entries(cluster_placements["Average Population Density"]);
-  const avgPopAnchors : [string, number[]][] = Object.entries(anchor_points["Average Population Density"]);
 
   const demMeasures: [string, number[]][] = Object.entries(cluster_placements["Democrat Districts"]);
   const demAnchors : [string, number[]][] = Object.entries(anchor_points["Democrat Districts"]);
@@ -81,18 +76,6 @@ export default function CircleVisual()
       .attr("font-size", 10)
       .attr("fill", "black")
       .text("Opportunity Districts");
-    // Average Population Density
-    legend.append("circle")
-      .attr("cx", 135)
-      .attr("cy", 390)
-      .attr("r", 10)
-      .attr("fill", "gold");
-    legend.append("text")
-      .attr("x", 150)
-      .attr("y", 395)
-      .attr("font-size", 10)
-      .attr("fill", "black")
-      .text("Average Population Density");
     // Democrat Districts
     legend.append("circle")
       .attr("cx", 0)
@@ -146,33 +129,6 @@ export default function CircleVisual()
                   mapData={clusterPair}
                   className="tooltip bg-amber-100" 
                   clusterType = "Opportunity Districts"
-                  />
-              })
-            }
-            {/** Average Population Density **/}
-
-            {
-              Array.from(avg_pop_clusters).map((clusterPair, index) => {
-                // console.log(pointPlacement(measureTesting, clusterPair[0], 125))
-                // const measureData: ClusterMeasures = cluster_measures["Opportunity Districts"][clusterPair[0]];
-                return <ClusterButton key={index}
-                  point={pointPlacement(avgPopMeasures, clusterPair[0])}
-                  mapData={clusterPair}
-                  className="tooltip bg-amber-100" 
-                  color = "gold"
-                  clusterType = "Average Population Density"/>
-              })
-            }
-
-            {/**Avg Pop Density Anchors */}
-            {
-              Array.from(avgPopAnchors).map((clusterPair, index) => {
-                // const measureData: ClusterMeasures = cluster_measures["Opportunity Districts"][clusterPair[0]];
-                return <AnchorPoint key={index}
-                  point={pointPlacement(avgPopAnchors, clusterPair[0])}
-                  mapData={clusterPair}
-                  className="tooltip bg-amber-100" 
-                  clusterType = "Average Population Density"
                   />
               })
             }
