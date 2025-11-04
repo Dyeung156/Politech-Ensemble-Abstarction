@@ -86,7 +86,9 @@ def extract_values(content, map_index):
     fieldnames = ["Map"] + fieldnames
     
     # Open a new CSV file to write to
-    with open('data works\Actual Data\output.csv', mode='a', newline='') as outfile:
+    script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    csv_path = os.path.join(script_dir, 'Actual Data', 'output.csv')
+    with open(csv_path, mode='a', newline='') as outfile:
         csv_writer = csv.DictWriter(outfile, fieldnames=fieldnames)
 
         # Write the header (field names)
@@ -104,7 +106,8 @@ if __name__ == "__main__":
     file_paths = list_files_in_folder(PROJECT_ID, FOLDER_PATH, BRANCH)
 
     #file that will contain the CSV values
-    csv_path = "data works\Actual Data\output.csv"
+    script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    csv_path = os.path.join(script_dir, 'Actual Data', 'output.csv')
     
     # Delete the file if it exists (to get updated values)
     if os.path.exists(csv_path):
@@ -117,11 +120,15 @@ if __name__ == "__main__":
         if content:
             values = extract_values(content, index)
         
-    # Open the CSV file in read mode
-    with open(csv_path, mode='r') as file:
-        csv_reader = csv.DictReader(file)
-    
-        row_count = sum(1 for row in csv_reader)
+        # Open the CSV file in read mode (if it exists)
+    if os.path.exists(csv_path):
+        with open(csv_path, mode='r') as file:
+            csv_reader = csv.DictReader(file)
+            row_count = sum(1 for row in csv_reader)
+        print(f"There are {row_count} rows.")
+    else:
+        print("Warning: output.csv was not created. No files were fetched from GitLab.")
+        print("Check your GitLab token and credentials.")
         
     print(f"There are {row_count} rows.")
     
