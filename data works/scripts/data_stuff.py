@@ -1,9 +1,11 @@
 import util 
 import pandas as pd
-from opportunity_districts import black_opportunity_districts
-from political_parties import party_district_counts
 import json
 import os
+
+from opportunity_districts import black_opportunity_districts
+from political_parties import party_district_counts
+from partisan_margins import margin_median
 
 OPP_DISTRICTS = 1
 DEMOCRAT_COUNT = 2
@@ -102,23 +104,26 @@ def create_collection_data(file_path):
     num_districts = util.get_num_districts(file_path)
     
     map_data = []
-    opporutunity_districts_dict = dict()
-    democrat_dict = dict()
-    republician_dict = dict()
+    opporutunity_districts_dict: dict[int, int] = dict()
+    democrat_dict: dict[int, int] = dict()
+    republician_dict: dict[int, int] = dict()
+    margin_dict: dict[float, int] = dict()
     
     #go thru each row in the dataframe
     while row < len(df):    
         #get the cluster values for the current map
         opporutunity_districts = black_opportunity_districts(df, num_districts, row)
         democrat_maps, republician_maps = party_district_counts(df, num_districts, row)
-        
+        median_margin = margin_median(df, num_districts, row)
+
         #add the values to the dictionaries
         util.add_to_dict(opporutunity_districts_dict, opporutunity_districts, cur_map)
         util.add_to_dict(democrat_dict, democrat_maps, cur_map)
         util.add_to_dict(republician_dict, republician_maps, cur_map)
+        util.add_to_dict(margin_dict, median_margin, cur_map)
         
         #add to the entire data to the list 
-        data_entry = [cur_map, opporutunity_districts, democrat_maps, republician_maps]
+        data_entry = [cur_map, opporutunity_districts, democrat_maps, republician_maps, margin_dict]
         map_data.append(data_entry)
         
         #move row to the next map
@@ -127,10 +132,10 @@ def create_collection_data(file_path):
     
     op_range = (min(opporutunity_districts_dict), max(opporutunity_districts_dict))
     dem_range = (min(democrat_dict), max(democrat_dict))
-    rep_range = (min(republician_dict), max(republician_dict))
+    margin_range = (min(margin_dict), max(margin_dict))
     # the first tuple is added bc for consisitency with the constants 
-    ranges = [(0,0), op_range, dem_range, rep_range]
-    make_anchor_points(ranges, ["Opportunity Districts", "Democrat Districts", "Republician Districts"])
+    ranges = [(0,0), op_range, dem_range, margin_range]
+    make_anchor_points(ranges, ["Opportunity Districts", "Democratic - Republican Districts", "Margin"])
     
     for map_row in map_data:
         xValue, yValue = map_point(map_row, ranges)

@@ -2,9 +2,10 @@ import pandas as pd
 import json
 import util
 
-PARTIES = ["(2020, <Office.PRES: 'Presidential'>, <Party.DEM: 'Democratic'>)", "(2020, <Office.PRES: 'Presidential'>, <Party.REP: 'Republican'>)"]
-DEMOCRATIC = 0
-REPUBLICIAN = 1
+PARTIES = ["(2020, <Office.PRES: 'Presidential'>, <Party.DEM: 'Democratic'>)", 
+            "(2020, <Office.PRES: 'Presidential'>, <Party.REP: 'Republican'>)"]
+DEM = 0
+REP = 1
 
 def party_district_counts(df , num_districts : int, row : int):
     democrat_counts = 0
@@ -12,8 +13,8 @@ def party_district_counts(df , num_districts : int, row : int):
     
     #look at the districts in the map
     for index in range(num_districts):
-        dem_voters = df.iloc[row + index][PARTIES[DEMOCRATIC]] 
-        rep_voters = df.iloc[row + index][PARTIES[REPUBLICIAN]]
+        dem_voters = df.iloc[row + index][PARTIES[DEM]] 
+        rep_voters = df.iloc[row + index][PARTIES[REP]]
         
         if dem_voters > rep_voters:
             democrat_counts += 1
@@ -29,8 +30,8 @@ def political_parties_dict(file_path):
     cur_map = 0 
     num_districts = util.get_num_districts(file_path)
     
-    republician_dict = dict()
-    democratic_dict = dict()
+    republician_dict: dict[int, int] = dict()
+    democratic_dict: dict[int, int] = dict()
     
     #go thru each row in the dataframe
     while row < len(df):    
