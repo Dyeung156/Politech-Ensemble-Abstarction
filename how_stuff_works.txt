@@ -1,0 +1,11 @@
+You find the min and max of each trait you are using as an anchor 
+min value of the anchor goes lower 
+max value of the anchor goes higher 
+
+then, for each map
+- see where that map falls percentage wise for each trait 
+    * this will determine how far along the trait this map will place 
+    * hence why this is called the "radius" for that trait 
+- add up all the percentage to get the total weights for the map
+- now calculate the map's placement if you only consider the trait and its total weight 
+- avgerage out the trait placements -> map's final coordinates 
