@@ -41,14 +41,14 @@ def section_angle(section: int, is_negative: bool) -> float:
 CENTER = (150, 150)
 RADIUS = 175
 
-def trait_coordinates(section: int, radius_percent: float, total_weight: float) -> tuple: 
+def trait_coordinates(section: int, radius_percent: float, total_weight: float) -> tuple[float, float]: 
     angle = section_angle(section, radius_percent < 0.5) 
     # PS: if the points all cluttered togeteh agian, just revert this back to just angle *= radius_percent / total_weight
     section_end = angle + ANGLE_INCREMENT
     angle += (section_end - angle) * (radius_percent / total_weight)
     
-    xValue = CENTER[0] + RADIUS * radius_percent * math.cos(math.radians(angle))
-    yValue = CENTER[1] + RADIUS * radius_percent * math.sin(math.radians(angle))
+    xValue: float = CENTER[0] + RADIUS * radius_percent * math.cos(math.radians(angle))
+    yValue: float = CENTER[1] + RADIUS * radius_percent * math.sin(math.radians(angle))
     
     return (xValue , yValue )
 
