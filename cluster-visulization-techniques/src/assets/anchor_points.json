@@ -9,7 +9,7 @@
             237.5
         ]
     },
-    "Democrat Districts": {
+    "Democratic - Republican Districts": {
         "Min: 3": [
             149.99999999999997,
             -25.0
@@ -19,12 +19,12 @@
             325.0
         ]
     },
-    "Republician Districts": {
-        "Min: 6": [
+    "Median Margins": {
+        "Min: -0.15": [
             301.55444566227675,
             62.49999999999993
         ],
-        "Max: 11": [
+        "Max: 0.02": [
             -1.5544456622767768,
             237.5
         ]

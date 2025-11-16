@@ -4,7 +4,7 @@ import AnchorPoint from "./AnchorPoint";
 import cluster_placements from "@/assets/cluster_placements.json";
 import opp_district_data from "@/assets/opportunity_districts.json";
 import dem_count from "@/assets/democrat_count.json";
-import rep_count from "@/assets/republican_count.json"
+import margin_count from "@/assets/median_margin.json"
 import anchor_points from "@/assets/anchor_points.json";
 
 import {useEffect, useRef} from "react";
@@ -32,16 +32,16 @@ export default function CircleVisual()
 {
   const opp_district_clusters = Object.entries(opp_district_data);
   const dem_count_clusters = Object.entries(dem_count);
-  const rep_count_clusters = Object.entries(rep_count);
+  const margin_count_clusters = Object.entries(margin_count);
 
   const oppMeasures: [string, number[]][] = Object.entries(cluster_placements["Opportunity Districts"]);
   const oppAnchors: [string, number[]][] = Object.entries(anchor_points["Opportunity Districts"]);
 
   const demMeasures: [string, number[]][] = Object.entries(cluster_placements["Democrat Districts"]);
-  const demAnchors : [string, number[]][] = Object.entries(anchor_points["Democrat Districts"]);
+  const demAnchors : [string, number[]][] = Object.entries(anchor_points["Democratic - Republican Districts"]);
 
-  const repMeasures: [string, number[]][] = Object.entries(cluster_placements["Republician Districts"]);
-  const repAnchors : [string, number[]][] = Object.entries(anchor_points["Republician Districts"]);
+  const marginMeasures: [string, number[]][] = Object.entries(cluster_placements["Median Margins"]);
+  const marginAnchors : [string, number[]][] = Object.entries(anchor_points["Median Margins"]);
 
   const myRef = useRef<SVGGElement>(null);
   useEffect(() => 
@@ -52,7 +52,7 @@ export default function CircleVisual()
     legend.append("rect")
       .attr("x", -15)
       .attr("y", 360)
-      .attr("width", 300)
+      .attr("width", 315)
       .attr("height", 75)
       .attr("fill", "none")
       .attr("stroke", "gray")
@@ -76,30 +76,30 @@ export default function CircleVisual()
       .attr("font-size", 10)
       .attr("fill", "black")
       .text("Opportunity Districts");
-    // Democrat Districts
-    legend.append("circle")
-      .attr("cx", 0)
-      .attr("cy", 420)
-      .attr("r", 10)
-      .attr("fill", "#87CEFA");
-    legend.append("text")
-      .attr("x", 15)
-      .attr("y", 425)
-      .attr("font-size", 10)
-      .attr("fill", "black")
-      .text("Democrat Districts");
-    // Republican Districts
+    // Democrat - Republican Districts
     legend.append("circle")
       .attr("cx", 135)
       .attr("cy", 420)
       .attr("r", 10)
-      .attr("fill", "#FF6347");
+      .attr("fill", "#8E44AD");
     legend.append("text")
       .attr("x", 150)
       .attr("y", 425)
       .attr("font-size", 10)
       .attr("fill", "black")
-      .text("Republican Districts");
+      .text("Democrat - Republican Districts");
+    // Median Margins
+    legend.append("circle")
+      .attr("cx", 0)
+      .attr("cy", 420)
+      .attr("r", 10)
+      .attr("fill", "#FF6347");
+    legend.append("text")
+      .attr("x", 15)
+      .attr("y", 425)
+      .attr("font-size", 10)
+      .attr("fill", "black")
+      .text("Median Margin (%)");
   },[]);
 
   return (
@@ -133,7 +133,7 @@ export default function CircleVisual()
               })
             }
 
-            {/** Democrat Districts **/}
+            {/** Democrat - Republican Districts **/}
             {
               Array.from(dem_count_clusters).map((clusterPair, index) => {
                 // const measureData: ClusterMeasures = cluster_measures["Opportunity Districts"][clusterPair[0]];
@@ -141,11 +141,11 @@ export default function CircleVisual()
                   point={pointPlacement(demMeasures, clusterPair[0])}
                   mapData={clusterPair}
                   className="tooltip bg-amber-100" 
-                  color = "#87CEFA"
-                  clusterType = "Democrat Districts"/>
+                  color = "#8E44AD"
+                  clusterType = "Democrat - Republican Districts"/>
               })
             }
-            {/**Democrat Districts Anchors */}
+            {/**Democrat - Republican Districts Anchors */}
             {
               Array.from(demAnchors).map((clusterPair, index) => {
                 // const measureData: ClusterMeasures = cluster_measures["Opportunity Districts"][clusterPair[0]];
@@ -153,31 +153,31 @@ export default function CircleVisual()
                   point={pointPlacement(demAnchors, clusterPair[0])}
                   mapData={clusterPair}
                   className="tooltip bg-amber-100" 
-                  clusterType = "Democrat Districts"
+                  clusterType = "D - R Districts"
                   />
               })
             }
-            {/** Republican Districts **/}
+            {/** Median Margin Percentages **/}
             {
-              Array.from(rep_count_clusters).map((clusterPair, index) => {
+              Array.from(margin_count_clusters).map((clusterPair, index) => {
                 // const measureData: ClusterMeasures = cluster_measures["Opportunity Districts"][clusterPair[0]];
                 return <ClusterButton key={index}
-                  point={pointPlacement(repMeasures, clusterPair[0])}
+                  point={pointPlacement(marginMeasures, clusterPair[0])}
                   mapData={clusterPair}
                   className="tooltip bg-amber-100" 
                   color = "red"
-                  clusterType = "Republican Districts"/>
+                  clusterType = "Median Margin (%)"/>
               })
             }
-            {/**Republican Distirct Anchors */}
+            {/**Median Margin Percentages Anchors */}
             {
-              Array.from(repAnchors).map((clusterPair, index) => {
+              Array.from(marginAnchors).map((clusterPair, index) => {
                 // const measureData: ClusterMeasures = cluster_measures["Opportunity Districts"][clusterPair[0]];
                 return <AnchorPoint key={index}
-                  point={pointPlacement(repAnchors, clusterPair[0])}
+                  point={pointPlacement(marginAnchors, clusterPair[0])}
                   mapData={clusterPair}
                   className="tooltip bg-amber-100" 
-                  clusterType = "Republican Districts"
+                  clusterType = "Median Margin (%)"
                   />
               })
             }
