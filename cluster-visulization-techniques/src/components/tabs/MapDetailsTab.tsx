@@ -62,7 +62,7 @@ export default function MapDetailsTab()
                 const headerRow = tableHeader.append("tr");
                     // header cells
                     headerRow.selectAll("th")
-                        .data(["Plan Number", "Opportunity Districts", "Democrat Districts", "Republican Districts"])
+                        .data(["Plan Number", "Opportunity Districts", "Democrat-Republican Districts", "Median Margin (%)"])
                         .enter()
                         .append("th")
                         .attr("class", "px-4 py-2 border")
@@ -79,8 +79,11 @@ export default function MapDetailsTab()
                         .data([
                             dataRow?.map_id ?? i,
                             dataRow?.opportunity_districts,
-                            dataRow?.democrat_count,
-                            dataRow?.republican_count
+                            dataRow?.democrat_count && dataRow?.republican_count 
+                                ? `${dataRow.democrat_count}:${dataRow.republican_count}`
+                                : "N/A",
+                            // dataRow?.republican_count,
+                            dataRow?.median_margin
                         ])
                         .enter()
                         .append("td")
