@@ -37,11 +37,11 @@ export default function CircleVisual()
   const oppMeasures: [string, number[]][] = Object.entries(cluster_placements["Opportunity Districts"]);
   const oppAnchors: [string, number[]][] = Object.entries(anchor_points["Opportunity Districts"]);
 
-  const demMeasures: [string, number[]][] = Object.entries(cluster_placements["Democrat Districts"]);
+  const demMeasures: [string, number[]][] = Object.entries(cluster_placements["Democrat - Republican Districts"]);
   const demAnchors : [string, number[]][] = Object.entries(anchor_points["Democratic - Republican Districts"]);
 
-  const marginMeasures: [string, number[]][] = Object.entries(cluster_placements["Median Margins"]);
-  const marginAnchors : [string, number[]][] = Object.entries(anchor_points["Median Margins"]);
+  const marginMeasures: [string, number[]][] = Object.entries(cluster_placements["Median Margins (%)"]);
+  const marginAnchors : [string, number[]][] = Object.entries(anchor_points["Median Margins (%)"]);
 
   const myRef = useRef<SVGGElement>(null);
   useEffect(() => 
@@ -88,7 +88,7 @@ export default function CircleVisual()
       .attr("font-size", 10)
       .attr("fill", "black")
       .text("Democrat - Republican Districts");
-    // Median Margins
+    // Median Margins (%)
     legend.append("circle")
       .attr("cx", 0)
       .attr("cy", 420)
@@ -166,7 +166,7 @@ export default function CircleVisual()
                   mapData={clusterPair}
                   className="tooltip bg-amber-100" 
                   color = "red"
-                  clusterType = "Median Margin (%)"/>
+                  clusterType = "Median Margins (%)"/>
               })
             }
             {/**Median Margin Percentages Anchors */}
@@ -177,7 +177,7 @@ export default function CircleVisual()
                   point={pointPlacement(marginAnchors, clusterPair[0])}
                   mapData={clusterPair}
                   className="tooltip bg-amber-100" 
-                  clusterType = "Median Margin (%)"
+                  clusterType = "Median Margins (%)"
                   />
               })
             }

@@ -157,7 +157,7 @@ def create_collection_data(file_path):
     margin_range = (min(margin_dict), max(margin_dict))
     # the empty tuples added for consisitency with the map data csv format
     ranges = [(0,0), op_range, dem_range, margin_range]
-    make_anchor_points(ranges, ["Opportunity Districts", "Democratic - Republican Districts", "Median Margins"])
+    make_anchor_points(ranges, ["Opportunity Districts", "Democratic - Republican Districts", "Median Margins (%)"])
     
     # calculate (x, y) for each map 
     for map_row in map_data:
@@ -168,8 +168,8 @@ def create_collection_data(file_path):
     # calculate the average (x, y) for each cluster coordinates
     measures_dict = dict()
     measures_dict["Opportunity Districts"] = cluster_trait_coordinates(opporutunity_districts_dict, map_data, ranges, OPP_DISTRICTS)
-    measures_dict["Democrat Districts"] = cluster_trait_coordinates(democrat_dict, map_data, ranges, DEMOCRAT_COUNT)
-    measures_dict["Median Margins"] = cluster_trait_coordinates(margin_dict, map_data, ranges, 3)
+    measures_dict["Democrat - Republican Districts"] = cluster_trait_coordinates(democrat_dict, map_data, ranges, DEMOCRAT_COUNT)
+    measures_dict["Median Margins (%)"] = cluster_trait_coordinates(margin_dict, map_data, ranges, 3)
     
     map_df = pd.DataFrame(map_data, columns=["map_id", "opportunity_districts", 
                                              "democrat_count", "republican_count", "median_margin", 

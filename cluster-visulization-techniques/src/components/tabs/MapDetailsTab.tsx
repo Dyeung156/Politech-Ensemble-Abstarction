@@ -80,7 +80,7 @@ export default function MapDetailsTab()
                             dataRow?.map_id ?? i,
                             dataRow?.opportunity_districts,
                             dataRow?.democrat_count && dataRow?.republican_count 
-                                ? `${dataRow.democrat_count}:${dataRow.republican_count}`
+                                ? `${dataRow.democrat_count} : ${dataRow.republican_count}`
                                 : "N/A",
                             // dataRow?.republican_count,
                             dataRow?.median_margin

@@ -83,12 +83,12 @@ if __name__ == "__main__":
     avg_dict["Opportunity Districts"] = avg_values
     
     range_values, avg_values = summary_calculation('democrat_count', df)
-    range_dict["Democrat Districts"] = range_values
-    avg_dict["Democrat Districts"] = avg_values
+    range_dict["Democrat - Republican Districts"] = range_values
+    avg_dict["Democrat - Republican Districts"] = avg_values
     
     range_values, avg_values = summary_calculation('median_margin', df)
-    range_dict["Median Margins"] = range_values
-    avg_dict["Median Margins"] = avg_values
+    range_dict["Median Margins (%)"] = range_values
+    avg_dict["Median Margins (%)"] = avg_values
     
     with open(os.path.join(PREFIX, 'cluster_ranges.json'), "w") as file:
         json.dump(range_dict, file, indent = 4)
