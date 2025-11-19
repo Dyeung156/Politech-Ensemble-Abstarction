@@ -30,10 +30,9 @@ def map_percentile(map_data, data_range) -> float:
     max_map = data_range[1]
     min_map = data_range[0]
     
-    resulting_distance = (map_data - min_map) / (max_map - min_map)
+    resulting_distance = (map_data - min_map) / abs(max_map - min_map)
     
-    # Clamp to [0, 1] to ensure valid percentile
-    return max(0.0, min(1.0, resulting_distance))
+    return resulting_distance
 
 #Description: creates the anchor points for the map and writes them to a JSON file
 #Parameters: ranges - the ranges of the data
@@ -86,9 +85,9 @@ def cluster_map_point(map_data_row, ranges, trait: int):
     
     #TODO: if this looks werid, try using the trait coordinates function instead
     # need the subtractions since the section input is 0 based and the constants are 1 based
-    op_point = util.cluster_anchor_point(OPP_DISTRICTS - 1, op_radius * weights[OPP_DISTRICTS], total_weight)
-    dem_point = util.cluster_anchor_point(DEMOCRAT_COUNT - 1, dem_radius* weights[DEMOCRAT_COUNT], total_weight)
-    margin_point = util.cluster_anchor_point(2, margin_radius * weights[3], total_weight)
+    op_point = util.trait_coordinates(OPP_DISTRICTS - 1, op_radius * weights[OPP_DISTRICTS], total_weight)
+    dem_point = util.trait_coordinates(DEMOCRAT_COUNT - 1, dem_radius* weights[DEMOCRAT_COUNT], total_weight)
+    margin_point = util.trait_coordinates(2, margin_radius * weights[3], total_weight)
     
     avg_xValue = (op_point[0] + dem_point[0] + margin_point[0]) / 3
     avg_yValue = (op_point[1] + dem_point[1] + margin_point[1]) / 3
