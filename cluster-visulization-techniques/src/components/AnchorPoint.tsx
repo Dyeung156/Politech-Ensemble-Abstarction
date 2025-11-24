@@ -63,23 +63,12 @@ export default function AnchorPoint({ point, mapData, className, clusterType }: 
       .text(clusterType);
 
     // to show the anchor point value 
-    console.log(mapData);
-    if (clusterType == "D - R Districts")
-    {
-      text.append("tspan")
-      .attr("x", textX)
-      .attr("dy", "10")
-      .attr("text-anchor", "middle")
-      .text(`${mapData[0]}:${Number(mapData[0])}`); // mapData[0] is the cluster name or identifier
-    }
-    else
-    {
-      text.append("tspan")
-      .attr("x", textX)
-      .attr("dy", "10")
-      .attr("text-anchor", "middle")
-      .text(mapData[0]); // mapData[0] is the cluster name or identifier
-    }
+    text.append("tspan")
+    .attr("x", textX)
+    .attr("dy", "10")
+    .attr("text-anchor", "middle")
+    .text(mapData[0]); // mapData[0] is the cluster name or identifier
+    
     
   }, [ x, y, textX, mapData, clusterType]);
 

@@ -87,13 +87,13 @@ export default function CircleVisual()
       .attr("y", 425)
       .attr("font-size", 10)
       .attr("fill", "black")
-      .text("Democrat - Republican Districts");
+      .text("Democratic - Republican Districts");
     // Median Margins (%)
     legend.append("circle")
       .attr("cx", 0)
       .attr("cy", 420)
       .attr("r", 10)
-      .attr("fill", "#FF6347");
+      .attr("fill", "#D4A017");
     legend.append("text")
       .attr("x", 15)
       .attr("y", 425)
@@ -165,7 +165,7 @@ export default function CircleVisual()
                   point={pointPlacement(marginMeasures, clusterPair[0])}
                   mapData={clusterPair}
                   className="tooltip bg-amber-100" 
-                  color = "red"
+                  color = "#D4A017"
                   clusterType = "Median Margins (%)"/>
               })
             }
