@@ -36,16 +36,28 @@ def map_percentile(map_data, data_range) -> float:
 
 #Description: creates the anchor points for the map and writes them to a JSON file
 #Parameters: ranges - the ranges of the data
-#            anchor_names - the names of the anchors
+#            ratio_suffix - the suffix for the democrat - republican counts
 #Returns: none
-def make_anchor_points(ranges: list[tuple[int, int]], anchor_names: list[str]):
+def make_anchor_points(ranges: list[tuple[int, int]], ratio_suffix: tuple[int, int]):
     results = dict()
+    anchor_names = ["filler for consistency", "Opportunity Districts", "Democratic - Republican Districts", "Median Margins (%)"]
     length = len(anchor_names)
-    for i in range(length):
+    for i in range(1, length):
         # get the (x, y) points for the anchor points
         anchor_points = dict()
-        anchor_points[f"Min: {ranges[i + 1][0]}"] = util.cluster_anchor_point(i, -1.0, -1.0)
-        anchor_points[f"Max: {ranges[i + 1][1]}"] = util.cluster_anchor_point(i, 1.0, 1.0)
+        
+        min_str: str = ""
+        max_str: str = ""
+        
+        if i == DEMOCRAT_COUNT:  # special case for the democrat - republican counts
+            min_str = f"Min : {ranges[i][0]} - {ratio_suffix[1]}"
+            max_str = f"Max : {ranges[i][1]} - {ratio_suffix[0]}"
+        else:
+            min_str = f"Min : {ranges[i][0]}"
+            max_str = f"Max : {ranges[i][1]}"
+            
+        anchor_points[min_str] = util.cluster_anchor_point(i, -1.0, -1.0)
+        anchor_points[max_str] = util.cluster_anchor_point(i, 1.0, 1.0)
         # add to results dictionary
         results[anchor_names[i]] = anchor_points
         
@@ -91,7 +103,6 @@ def cluster_map_point(map_data_row, ranges, trait: int):
     
     avg_xValue = (op_point[0] + dem_point[0] + margin_point[0]) / 3
     avg_yValue = (op_point[1] + dem_point[1] + margin_point[1]) / 3
-    
     return (round(avg_xValue, 2) , round(avg_yValue, 2))
 
 #Description: calculates the coordinates for clusters for a given trait
@@ -153,10 +164,11 @@ def create_collection_data(file_path):
     
     op_range = (min(opporutunity_districts_dict), max(opporutunity_districts_dict))
     dem_range = (min(democrat_dict), max(democrat_dict))
+    rep_range = (min(republician_dict), max(republician_dict))
     margin_range = (min(margin_dict), max(margin_dict))
     # the empty tuples added for consisitency with the map data csv format
     ranges = [(0,0), op_range, dem_range, margin_range]
-    make_anchor_points(ranges, ["Opportunity Districts", "Democratic - Republican Districts", "Median Margins (%)"])
+    make_anchor_points(ranges, rep_range)
     
     # calculate (x, y) for each map 
     for map_row in map_data:

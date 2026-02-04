@@ -59,7 +59,7 @@ def trait_coordinates(section: int, radius_percent: float, total_weight: float) 
 #Returns: the anchor point for a cluster (tuple[float, float])
 def cluster_anchor_point(section: int, radius_percent: float, total_weight) -> tuple[float, float]:
     #add the half of the angle increment to the section start to get the center of the section
-    angle = section_angle(section, radius_percent < 0.5) + (ANGLE_INCREMENT / 2)
+    angle = section_angle(section - 1, radius_percent < 0.5) + (ANGLE_INCREMENT / 2)
     
     xValue = CENTER[0] + RADIUS  * math.cos(math.radians(angle))
     yValue = CENTER[1] + RADIUS  * math.sin(math.radians(angle))

@@ -18,9 +18,6 @@ def update_range(section: int, incoming_value: float, ranges: list[ list[float] 
 
 def cluster_summary(index_list: list[int], df: pd.DataFrame):
     # extra [0,0] and 0.0 at the start is to remain consistent with the other script
-    # Columns: 0=map_id, 1=opportunity_districts, 2=democrat_count, 3=republican_count, 4=median_margin
-    # We read columns 1, 2, and 4 (indices 1, 2, 4)
-    # Initialize ranges: [min, max] - use inf/-inf to ensure first value updates both
     value_ranges: list[ list[float] ] = [
         [0, 0],  # placeholder at index 0
         [float('inf'), float('-inf')],  # section 1: opportunity_districts
@@ -28,7 +25,7 @@ def cluster_summary(index_list: list[int], df: pd.DataFrame):
         [float('inf'), float('-inf')]   # section 3: median_margin (can be negative)
     ]
     avg_values: list[float] = [0.0, 0.0, 0.0, 0.0]
-    columns_to_read = [OPP_DISTRICTS, DEMOCRAT_COUNT, MARGINAL_COUNT]  # [1, 2, 4]
+    columns_to_read = [OPP_DISTRICTS, DEMOCRAT_COUNT, MARGINAL_COUNT]  
     
     for index in index_list:
         # update range values for each of the 3 columns we care about

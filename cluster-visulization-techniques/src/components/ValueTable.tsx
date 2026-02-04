@@ -28,11 +28,11 @@ export default function ValueTable({ clusterType, mapValue }: ValueTableProps)
     const all_ranges: ClusterRanges = cluster_range_json
     const all_avg: ClusterAvgs = cluster_avg_json
 
-    console.log(all_ranges);
     console.log(clusterType);
     console.log(mapValue);
     // get the values for the cluster type and map tuple
     const ranges = all_ranges[clusterType][mapValue];
+    console.log(ranges);
     const avg = all_avg[clusterType][mapValue];
     const category_names = ["Opportunity Districts", "Democratic - Republican Districts", "Median Margin Percentages"]
 

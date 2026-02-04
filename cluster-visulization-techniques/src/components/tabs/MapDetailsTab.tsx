@@ -73,6 +73,8 @@ export default function MapDetailsTab()
             for (let i = displayRow; i < Math.min(displayRow + rowsPerPage, allMapData.length); i++)
             {
                 const dataRow = allMapData[i];
+                const percentage = (Number(dataRow.democrat_count) / (Number(dataRow.democrat_count) + Number(dataRow.republican_count))) * 100;
+                const display_percent = percentage.toFixed(2);
                 const tableRow = tableBody.append("tr");
                     // data cells
                     tableRow.selectAll("td")
@@ -80,7 +82,7 @@ export default function MapDetailsTab()
                             dataRow?.map_id ?? i,
                             dataRow?.opportunity_districts,
                             dataRow?.democrat_count && dataRow?.republican_count 
-                                ? `${dataRow.democrat_count} : ${dataRow.republican_count}`
+                                ? `${dataRow.democrat_count} : ${dataRow.republican_count} -> ${display_percent}%`
                                 : "N/A",
                             // dataRow?.republican_count,
                             dataRow?.median_margin
