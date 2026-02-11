@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import os
 import util
 
 def minority_districts(df , num_districts : int, row : int):
@@ -40,11 +41,13 @@ def group_percent_dicts(file_path):
     return map_dict
     
 def make_JSON():
-    file_path = "data works\Actual Data\output.csv"
-    map_dict= group_percent_dicts(file_path)
+    script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    file_path = os.path.join(script_dir, 'Actual Data', 'output.csv')
+    map_dict = group_percent_dicts(file_path)
     
     #upload the dictionary to a JSON file
-    with open("data works\Actual Data\ethnic_group_majority_data.json", "w") as json_file:
+    json_path = os.path.join(script_dir, 'Actual Data', 'ethnic_group_majority_data.json')
+    with open(json_path, "w") as json_file:
         json.dump(map_dict, json_file, indent=4)
 
         

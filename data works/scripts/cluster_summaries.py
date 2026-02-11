@@ -87,6 +87,7 @@ if __name__ == "__main__":
     range_dict["Median Margins (%)"] = range_values
     avg_dict["Median Margins (%)"] = avg_values
     
+    
     with open(os.path.join(PREFIX, 'cluster_ranges.json'), "w") as file:
         json.dump(range_dict, file, indent = 4)
         

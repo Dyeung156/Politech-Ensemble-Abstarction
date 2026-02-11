@@ -49,11 +49,13 @@ def opportunity_districts__dicts(file_path):
     return black_dict
     
 def make_JSON():
-    file_path = "data works\Actual Data\output.csv"
-    black_dict= opportunity_districts__dicts(file_path)
+    script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    file_path = os.path.join(script_dir, 'Actual Data', 'output.csv')
+    black_dict = opportunity_districts__dicts(file_path)
     
     #upload the dictionary to a JSON file
-    with open("data works\Actual Data\\black_opportunity_districts.json", "w") as json_file:
+    json_path = os.path.join(script_dir, 'Actual Data', 'black_opportunity_districts.json')
+    with open(json_path, "w") as json_file:
         json.dump(black_dict, json_file, indent=4)
 
 if __name__ == "__main__":

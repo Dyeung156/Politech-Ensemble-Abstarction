@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import os
 import util
 
 PARTIES = ["(2020, <Office.PRES: 'Presidential'>, <Party.DEM: 'Democratic'>)", 
@@ -47,15 +48,18 @@ def political_parties_dict(file_path):
     return democratic_dict, republician_dict
 
 def make_JSON():
-    file_path = "data works\Actual Data\output.csv"
+    script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    file_path = os.path.join(script_dir, 'Actual Data', 'output.csv')
     democratic_dict, republician_dict = political_parties_dict(file_path)
     
     #upload the democrat dictionary to a JSON file 
-    with open("data works\Actual Data\democrat_clusters.json", "w") as json_file:
+    json_path_dem = os.path.join(script_dir, 'Actual Data', 'democrat_clusters.json')
+    with open(json_path_dem, "w") as json_file:
         json.dump(democratic_dict, json_file, indent=4)
     
     #upload the republician dictionary to a JSON file 
-    with open("data works\Actual Data\\republican_clusters.json", "w") as json_file:
+    json_path_rep = os.path.join(script_dir, 'Actual Data', 'republican_clusters.json')
+    with open(json_path_rep, "w") as json_file:
         json.dump(republician_dict, json_file, indent=4)
 
 if __name__ == "__main__":

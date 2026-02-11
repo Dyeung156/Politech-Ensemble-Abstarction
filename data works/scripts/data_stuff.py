@@ -90,7 +90,8 @@ def cluster_map_point(map_data_row, ranges, trait: int):
     dem_radius = map_percentile(map_data_row[DEMOCRAT_COUNT], ranges[DEMOCRAT_COUNT])
     margin_radius = map_percentile(map_data_row[MARGIN_COUNT], ranges[3])
     
-    weights = [0, op_radius, dem_radius, margin_radius]
+    # weights = [0, op_radius, dem_radius, margin_radius]
+    weights = [0, 1, 1, 1]
     # double the weight of the section we are looking at
     weights[trait] *= 2
     total_weight = sum(weights)
@@ -112,6 +113,23 @@ def cluster_map_point(map_data_row, ranges, trait: int):
 #            trait - the trait of the cluster
 #Returns: the coordinates for the cluster (tuple[float, float])
 def cluster_trait_coordinates(cluster_dict, map_data, ranges, trait: int) -> dict[str, tuple[float, float]]:
+    cluster_measures = dict()
+    for cluster, map_indices in cluster_dict.items():
+        x_sum = 0
+        y_sum = 0
+        
+        for map_index in map_indices:
+            x, y = cluster_map_point(map_data[map_index], ranges, trait)
+            
+            x_sum += x
+            y_sum += y
+        
+        # store the avg X and Y values for the cluster
+        cluster_measures[cluster] = (x_sum / len(map_indices), y_sum / len(map_indices))
+    
+    return cluster_measures
+
+def test_method(cluster_dict, map_data, ranges, trait: int) -> dict[str, tuple[float, float]]:
     cluster_measures = dict()
     for cluster, map_indices in cluster_dict.items():
         x_sum = 0
@@ -165,9 +183,9 @@ def create_collection_data(file_path):
     op_range = (min(opporutunity_districts_dict), max(opporutunity_districts_dict))
     dem_range = (min(democrat_dict), max(democrat_dict))
     rep_range = (min(republician_dict), max(republician_dict))
-    margin_range = (min(margin_dict), max(margin_dict))
+    median_range = (min(margin_dict), max(margin_dict))
     # the empty tuples added for consisitency with the map data csv format
-    ranges = [(0,0), op_range, dem_range, margin_range]
+    ranges = [(0,0), op_range, dem_range, median_range]
     make_anchor_points(ranges, rep_range)
     
     # calculate (x, y) for each map 
