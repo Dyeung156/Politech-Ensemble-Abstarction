@@ -34,7 +34,7 @@ export default function ValueTable({ clusterType, mapValue }: ValueTableProps)
     const ranges = all_ranges[clusterType][mapValue];
     console.log(ranges);
     const avg = all_avg[clusterType][mapValue];
-    const category_names = ["Opportunity Districts", "Democratic - Republican Districts", "Median Margin Percentages"]
+    const category_names = ["Opportunity Districts", "Democratic District Percentage", "Median Margin of Victory(%)"]
 
     const myRef = useRef<HTMLDivElement>(null);
     useEffect(() =>

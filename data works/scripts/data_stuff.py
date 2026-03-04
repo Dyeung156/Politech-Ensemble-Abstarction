@@ -36,11 +36,10 @@ def map_percentile(map_data, data_range) -> float:
 
 #Description: creates the anchor points for the map and writes them to a JSON file
 #Parameters: ranges - the ranges of the data
-#            ratio_suffix - the suffix for the democrat - republican counts
 #Returns: none
-def make_anchor_points(ranges: list[tuple[int, int]], ratio_suffix: tuple[int, int]):
+def make_anchor_points(ranges: list[tuple[int, int]]):
     results = dict()
-    anchor_names = ["filler for consistency", "Opportunity Districts", "Democratic - Republican Districts", "Median Margins (%)"]
+    anchor_names = ["filler for consistency", "Opportunity Districts", "Democratic District Percentage", "Median Margin of Victory(%)"]
     length = len(anchor_names)
     for i in range(1, length):
         # get the (x, y) points for the anchor points
@@ -49,12 +48,12 @@ def make_anchor_points(ranges: list[tuple[int, int]], ratio_suffix: tuple[int, i
         min_str: str = ""
         max_str: str = ""
         
-        if i == DEMOCRAT_COUNT:  # special case for the democrat - republican counts
-            min_str = f"Min : {ranges[i][0]} - {ratio_suffix[1]}"
-            max_str = f"Max : {ranges[i][1]} - {ratio_suffix[0]}"
-        else:
-            min_str = f"Min : {ranges[i][0]}"
-            max_str = f"Max : {ranges[i][1]}"
+        # if i == DEMOCRAT_COUNT:  # special case for the democrat - republican counts
+        #     min_str = f"Min : {ranges[i][0] / total_districts:.2f}"
+        #     max_str = f"Max : {ranges[i][1] / total_districts:.2f}"
+        # else:
+        min_str = f"Min : {ranges[i][0]}"
+        max_str = f"Max : {ranges[i][1]}"
             
         anchor_points[min_str] = util.cluster_anchor_point(i, -1.0, -1.0)
         anchor_points[max_str] = util.cluster_anchor_point(i, 1.0, 1.0)
@@ -67,10 +66,11 @@ def make_anchor_points(ranges: list[tuple[int, int]], ratio_suffix: tuple[int, i
 #Description: calculates the coordinates for a map 
 #Parameters: map_data_row - the row of the map data
 #            ranges - the ranges of the data
+#            num_districts - the number of districts in the map
 #Returns: the coordinates for the map (tuple[float, float])
-def map_coordinates(map_data_row, ranges) -> tuple[float, float]:
+def map_coordinates(map_data_row, ranges, num_districts) -> tuple[float, float]:
     op_radius = map_percentile(map_data_row[OPP_DISTRICTS], ranges[OPP_DISTRICTS])
-    dem_radius = map_percentile(map_data_row[DEMOCRAT_COUNT], ranges[DEMOCRAT_COUNT])
+    dem_radius = map_percentile(round(map_data_row[DEMOCRAT_COUNT] / num_districts, 2), ranges[DEMOCRAT_COUNT])
     margin_radius = map_percentile(map_data_row[MARGIN_COUNT], ranges[3])
     
     total_weight = op_radius + dem_radius + margin_radius
@@ -85,9 +85,9 @@ def map_coordinates(map_data_row, ranges) -> tuple[float, float]:
     
     return (round(avg_xValue, 2) , round(avg_yValue, 2))
 
-def cluster_map_point(map_data_row, ranges, trait: int):
+def cluster_map_point(map_data_row, ranges, trait: int, num_districts) -> tuple[float, float]:
     op_radius = map_percentile(map_data_row[OPP_DISTRICTS], ranges[OPP_DISTRICTS])
-    dem_radius = map_percentile(map_data_row[DEMOCRAT_COUNT], ranges[DEMOCRAT_COUNT])
+    dem_radius = map_percentile(round(map_data_row[DEMOCRAT_COUNT] / num_districts, 2), ranges[DEMOCRAT_COUNT])
     margin_radius = map_percentile(map_data_row[MARGIN_COUNT], ranges[3])
     
     # weights = [0, op_radius, dem_radius, margin_radius]
@@ -112,31 +112,14 @@ def cluster_map_point(map_data_row, ranges, trait: int):
 #            ranges - the ranges of the data
 #            trait - the trait of the cluster
 #Returns: the coordinates for the cluster (tuple[float, float])
-def cluster_trait_coordinates(cluster_dict, map_data, ranges, trait: int) -> dict[str, tuple[float, float]]:
+def cluster_trait_coordinates(cluster_dict, map_data, ranges, trait: int, num_districts) -> dict[str, tuple[float, float]]:
     cluster_measures = dict()
     for cluster, map_indices in cluster_dict.items():
         x_sum = 0
         y_sum = 0
         
         for map_index in map_indices:
-            x, y = cluster_map_point(map_data[map_index], ranges, trait)
-            
-            x_sum += x
-            y_sum += y
-        
-        # store the avg X and Y values for the cluster
-        cluster_measures[cluster] = (x_sum / len(map_indices), y_sum / len(map_indices))
-    
-    return cluster_measures
-
-def test_method(cluster_dict, map_data, ranges, trait: int) -> dict[str, tuple[float, float]]:
-    cluster_measures = dict()
-    for cluster, map_indices in cluster_dict.items():
-        x_sum = 0
-        y_sum = 0
-        
-        for map_index in map_indices:
-            x, y = cluster_map_point(map_data[map_index], ranges, trait)
+            x, y = cluster_map_point(map_data[map_index], ranges, trait, num_districts)
             
             x_sum += x
             y_sum += y
@@ -163,17 +146,17 @@ def create_collection_data(file_path):
     while row < len(df):    
         #get the cluster values for the current map
         opporutunity_districts = black_opportunity_districts(df, num_districts, row)
-        democrat_maps, republician_maps = party_district_counts(df, num_districts, row)
+        democrat_districts, republician_districts = party_district_counts(df, num_districts, row)
         median_margin = margin_median(df, num_districts, row)
 
         #add the values to the dictionaries
         util.add_to_dict(opporutunity_districts_dict, opporutunity_districts, cur_map)
-        util.add_to_dict(democrat_dict, democrat_maps, cur_map)
-        util.add_to_dict(republician_dict, republician_maps, cur_map)
+        util.add_to_dict(democrat_dict, round(democrat_districts / num_districts, 2), cur_map)
+        util.add_to_dict(republician_dict, republician_districts, cur_map)
         util.add_to_dict(margin_dict, median_margin, cur_map)
         
         #add to the entire data to the list 
-        data_entry = [cur_map, opporutunity_districts, democrat_maps, republician_maps, median_margin]
+        data_entry = [cur_map, opporutunity_districts, democrat_districts, republician_districts, median_margin, num_districts]
         map_data.append(data_entry)
         
         #move row to the next map
@@ -182,26 +165,26 @@ def create_collection_data(file_path):
     
     op_range = (min(opporutunity_districts_dict), max(opporutunity_districts_dict))
     dem_range = (min(democrat_dict), max(democrat_dict))
-    rep_range = (min(republician_dict), max(republician_dict))
+    #rep_range = (min(republician_dict), max(republician_dict))
     median_range = (min(margin_dict), max(margin_dict))
     # the empty tuples added for consisitency with the map data csv format
     ranges = [(0,0), op_range, dem_range, median_range]
-    make_anchor_points(ranges, rep_range)
+    make_anchor_points(ranges)
     
     # calculate (x, y) for each map 
     for map_row in map_data:
-        xValue, yValue = map_coordinates(map_row, ranges)
+        xValue, yValue = map_coordinates(map_row, ranges, num_districts)
         map_row.append(xValue)
         map_row.append(yValue)
     
     # calculate the average (x, y) for each cluster coordinates
     measures_dict = dict()
-    measures_dict["Opportunity Districts"] = cluster_trait_coordinates(opporutunity_districts_dict, map_data, ranges, OPP_DISTRICTS)
-    measures_dict["Democrat - Republican Districts"] = cluster_trait_coordinates(democrat_dict, map_data, ranges, DEMOCRAT_COUNT)
-    measures_dict["Median Margins (%)"] = cluster_trait_coordinates(margin_dict, map_data, ranges, 3)
+    measures_dict["Opportunity Districts"] = cluster_trait_coordinates(opporutunity_districts_dict, map_data, ranges, OPP_DISTRICTS, num_districts)
+    measures_dict["Democratic District Percentage"] = cluster_trait_coordinates(democrat_dict, map_data, ranges, DEMOCRAT_COUNT, num_districts)
+    measures_dict["Median Margin of Victory(%)"] = cluster_trait_coordinates(margin_dict, map_data, ranges, 3, num_districts)
     
     map_df = pd.DataFrame(map_data, columns=["map_id", "opportunity_districts", 
-                                             "democrat_count", "republican_count", "median_margin", 
+                                             "democrat_count", "republican_count", "median_margin", "num_districts",
                                              "X Value", "Y Value"])
     script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     csv_path = os.path.join(script_dir, 'Actual Data', 'map_data.csv')

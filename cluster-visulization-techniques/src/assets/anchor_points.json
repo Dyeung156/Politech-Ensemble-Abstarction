@@ -9,17 +9,17 @@
             237.5
         ]
     },
-    "Democratic - Republican Districts": {
-        "Min : 3 - 11": [
+    "Democratic District Percentage": {
+        "Min : 0.21": [
             149.99999999999997,
             -25.0
         ],
-        "Max : 8 - 6": [
+        "Max : 0.57": [
             150.0,
             325.0
         ]
     },
-    "Median Margins (%)": {
+    "Median Margin of Victory(%)": {
         "Min : -0.15": [
             301.55444566227675,
             62.49999999999993

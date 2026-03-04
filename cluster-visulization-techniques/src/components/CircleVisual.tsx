@@ -37,11 +37,11 @@ export default function CircleVisual()
   const oppMeasures: [string, number[]][] = Object.entries(cluster_placements["Opportunity Districts"]);
   const oppAnchors: [string, number[]][] = Object.entries(anchor_points["Opportunity Districts"]);
 
-  const demMeasures: [string, number[]][] = Object.entries(cluster_placements["Democrat - Republican Districts"]);
-  const demAnchors : [string, number[]][] = Object.entries(anchor_points["Democratic - Republican Districts"]);
+  const demMeasures: [string, number[]][] = Object.entries(cluster_placements["Democratic District Percentage"]);
+  const demAnchors : [string, number[]][] = Object.entries(anchor_points["Democratic District Percentage"]);
 
-  const marginMeasures: [string, number[]][] = Object.entries(cluster_placements["Median Margins (%)"]);
-  const marginAnchors : [string, number[]][] = Object.entries(anchor_points["Median Margins (%)"]);
+  const marginMeasures: [string, number[]][] = Object.entries(cluster_placements["Median Margin of Victory(%)"]);
+  const marginAnchors : [string, number[]][] = Object.entries(anchor_points["Median Margin of Victory(%)"]);
 
   const myRef = useRef<SVGGElement>(null);
   useEffect(() => 
@@ -79,15 +79,15 @@ export default function CircleVisual()
     // Democrat - Republican Districts
     legend.append("circle")
       .attr("cx", 135)
-      .attr("cy", 420)
+      .attr("cy", 390)
       .attr("r", 10)
       .attr("fill", "#8E44AD");
     legend.append("text")
       .attr("x", 150)
-      .attr("y", 425)
+      .attr("y", 395)
       .attr("font-size", 10)
       .attr("fill", "black")
-      .text("Democratic - Republican Districts");
+      .text("Democratic District Percentage");
     // Median Margins (%)
     legend.append("circle")
       .attr("cx", 0)
@@ -99,7 +99,7 @@ export default function CircleVisual()
       .attr("y", 425)
       .attr("font-size", 10)
       .attr("fill", "black")
-      .text("Median Margin (%)");
+      .text("Median Margin of Victory(%)");
   },[]);
 
   return (
@@ -142,7 +142,7 @@ export default function CircleVisual()
                   mapData={clusterPair}
                   className="tooltip bg-amber-100" 
                   color = "#8E44AD"
-                  clusterType = "Democrat - Republican Districts"/>
+                  clusterType = "Democratic District Percentage"/>
               })
             }
             {/**Democrat - Republican Districts Anchors */}
@@ -153,7 +153,7 @@ export default function CircleVisual()
                   point={pointPlacement(demAnchors, clusterPair[0])}
                   mapData={clusterPair}
                   className="tooltip bg-amber-100" 
-                  clusterType = "D - R Districts"
+                  clusterType = "Democratic District Percentage"
                   />
               })
             }
@@ -166,7 +166,7 @@ export default function CircleVisual()
                   mapData={clusterPair}
                   className="tooltip bg-amber-100" 
                   color = "#D4A017"
-                  clusterType = "Median Margins (%)"/>
+                  clusterType = "Median Margin of Victory(%)"/>
               })
             }
             {/**Median Margin Percentages Anchors */}
@@ -177,7 +177,7 @@ export default function CircleVisual()
                   point={pointPlacement(marginAnchors, clusterPair[0])}
                   mapData={clusterPair}
                   className="tooltip bg-amber-100" 
-                  clusterType = "Median Margins (%)"
+                  clusterType = "Median Margin of Victory(%)"
                   />
               })
             }

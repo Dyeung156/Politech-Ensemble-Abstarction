@@ -6,6 +6,7 @@ import os
 OPP_DISTRICTS = 1
 DEMOCRAT_COUNT = 2
 MARGINAL_COUNT = 4   
+NUM_DISTRICTS = 5
 script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PREFIX = os.path.join(script_dir, 'Actual Data')
 
@@ -21,7 +22,7 @@ def cluster_summary(index_list: list[int], df: pd.DataFrame):
     value_ranges: list[ list[float] ] = [
         [0, 0],  # placeholder at index 0
         [float('inf'), float('-inf')],  # section 1: opportunity_districts
-        [float('inf'), float('-inf')],  # section 2: democrat_count  
+        [float('inf'), float('-inf')],  # section 2: democratic distric percentage 
         [float('inf'), float('-inf')]   # section 3: median_margin (can be negative)
     ]
     avg_values: list[float] = [0.0, 0.0, 0.0, 0.0]
@@ -31,13 +32,17 @@ def cluster_summary(index_list: list[int], df: pd.DataFrame):
         # update range values for each of the 3 columns we care about
         for section_idx, column_idx in enumerate(columns_to_read, start=1):
             # get the map data for the index
-            map_data = df.iloc[index, column_idx]
+            map_data = float(df.iloc[index, column_idx])
             
-            # Keep as float for median_margin, convert to int for counts (but store as float in ranges)
-            if column_idx == MARGINAL_COUNT:
-                map_data = float(map_data)  # median_margin is a float
-            else:
-                map_data = float(int(map_data))  # counts are ints, but store as float for consistency
+            if column_idx == DEMOCRAT_COUNT:
+                num_districts = int(df.iloc[index, NUM_DISTRICTS])
+                map_data = round(map_data / num_districts, 2)  # round to 2 decimal places for percentage
+                
+            # # Keep as float for median_margin, convert to int for counts (but store as float in ranges)
+            # if column_idx == MARGINAL_COUNT:
+            #     map_data = float(map_data)  # median_margin is a float
+            # else:
+            #     map_data = float(int(map_data))  # counts are ints, but store as float for consistency
             
             # update values
             update_range(section_idx, map_data, value_ranges)
@@ -80,12 +85,12 @@ if __name__ == "__main__":
     avg_dict["Opportunity Districts"] = avg_values
     
     range_values, avg_values = summary_calculation('democrat_count', df)
-    range_dict["Democrat - Republican Districts"] = range_values
-    avg_dict["Democrat - Republican Districts"] = avg_values
+    range_dict["Democratic District Percentage"] = range_values
+    avg_dict["Democratic District Percentage"] = avg_values
     
     range_values, avg_values = summary_calculation('median_margin', df)
-    range_dict["Median Margins (%)"] = range_values
-    avg_dict["Median Margins (%)"] = avg_values
+    range_dict["Median Margin of Victory(%)"] = range_values
+    avg_dict["Median Margin of Victory(%)"] = avg_values
     
     
     with open(os.path.join(PREFIX, 'cluster_ranges.json'), "w") as file:
