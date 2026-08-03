@@ -1,4 +1,4 @@
-# Cluster Visulization Techniques
+# Cluster Visualization Techniques
 The front end portion that illustrates the data using tabs.
 - The 1st tab shows the clusters and their placements relative to the anchor points on the edge of the circle.
 - Hovering over a cluster produces a 2nd tab that summarizes the data in it
