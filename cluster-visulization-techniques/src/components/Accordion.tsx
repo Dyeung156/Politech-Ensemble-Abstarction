@@ -1,4 +1,4 @@
-import { useState, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 export interface AccordionProps {
     title: string;
