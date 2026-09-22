@@ -16,3 +16,5 @@ The file includes functions that changes the current cluster (addCluster, wipeCl
 - [Cluster Details Tab](Docs/Front End/Tabs/Cluster Details Tab.MD)
 - [Map Details Tab](Docs/Front End/Tabs/Map Details Tab.MD)
 - [Tab Collection](Docs/Front End/Tabs/Tab Collection.MD)
+
+[Google](https://www.google.com)
