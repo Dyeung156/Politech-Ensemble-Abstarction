@@ -12,7 +12,7 @@ The file includes functions that changes the current cluster (addCluster, wipeCl
 - React Redux 
 
 # Used By 
-- [Cluster Button](../Smaller Components/Cluster Button.MD)
-- [Cluster Details Tab](../Tabs/Cluster Details Tab.MD)
-- [Map Details Tab](../Tabs/Map Details Tab.MD)
-- [Tab Collection](../Tabs/Tab Collection.MD)
+- [Cluster Button](../Smaller%20Components/Cluster%20Button.MD)
+- [Cluster Details Tab](../Tabs/Cluster%20Details%20Tab.MD)
+- [Map Details Tab](../Tabs/Map%20Details%20Tab.MD)
+- [Tab Collection](../Tabs/Tab%20Collection.MD)
