@@ -5,11 +5,11 @@ An anchor point is used in Circle Visual to illustrate either the max or min of 
 It uses the Point interface to hold its coodinrates on the screen and for displaying the max / min. 
 
 # Dependencies 
-- Point Type (Util)
+- [Point Type (Util)](../Util/Point%20Type.MD)
 - React 
   - useRef
   - useEffect
 - D3
 
 # Used By 
-- Circle Visual 
+- [Circle Visual](Circle%20Visual.MD)

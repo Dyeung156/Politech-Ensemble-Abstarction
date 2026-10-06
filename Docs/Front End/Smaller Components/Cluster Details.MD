@@ -4,7 +4,7 @@ Is the main component for an overview of the selected cluster. It holds the Valu
 
 
 # Dependencies 
-- Value Table
+- [Value Table](Value%20Table.MD)
 
 # Used By 
-- Cluster Details Tab 
+- [Cluster Details Tab](../Tabs/Cluster%20Details%20Tab.MD)

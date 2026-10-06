@@ -7,12 +7,12 @@ For example, a cluster that has high Opportunity Districts will go higher in the
 The placement of each cluster will be determined by the average of its values in each cluster feature, which was already computed by the Back End. This component uses hard-coded values from a JSON file to place each cluster. 
 
 # Dependencies 
-- Cluster Button 
-- Anchor Point
+- [Cluster Button](Cluster%20Button.MD)
+- [Anchor Point](Anchor%20Point.MD)
 - React 
   - useEffect
   - useRef
 - D3
 
 # Used By 
-- Cluster Visual Tab
+- [Cluster Visual Tab](../Tabs/Cluster%20Visual%20Tab.MD)

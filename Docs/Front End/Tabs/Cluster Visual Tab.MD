@@ -5,6 +5,6 @@ This tab houses the circle visual that provides users with an interactive overvi
 In order for users to interact with this tab at any time, the tab has a minimum size that allows the circle visual to remain in view. 
 
 # Dependencies 
-- Circle Visual 
+- [Circle Visual](../Smaller%20Components/Circle%20Visual.MD)
 # Used By 
-- Tab Collection 
+- [Tab Collection](Tab%20Collection.MD)

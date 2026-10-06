@@ -9,7 +9,7 @@ The Cluster Slice is React Redux that stores the selected cluster so a query is 
   - useState
   - useRef
   - useEffect
-- Cluster Slice 
+- [Cluster Slice](../React%20Redux/Cluster%20Slice.MD)
   - cluster, 
   - addCluster
   - wipeCluster
@@ -17,4 +17,4 @@ The Cluster Slice is React Redux that stores the selected cluster so a query is 
 - D3
 
 # Used By 
-- Circle Visual
+- [Circle Visual](Circle%20Visual.MD)

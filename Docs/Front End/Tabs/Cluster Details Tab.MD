@@ -11,7 +11,7 @@ This tab can be closed any time with either the user
     - useSelector 
     - RootState
     - cluster
-- Cluster Details
+- [Cluster Details](../Smaller%20Components/Cluster%20Details.MD)
 
 # Used By 
-- Tab Collection 
+- [Tab Collection](Tab%20Collection.MD)
